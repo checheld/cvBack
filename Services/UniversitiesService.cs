@@ -1,10 +1,8 @@
 ﻿
-using Data;
 using Data.Repositories.Abstract;
 using Domain;
 using Entities;
 using Mappers;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Services.Abstract;
 

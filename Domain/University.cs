@@ -1,6 +1,5 @@
 ﻿
 using Domain.Abstract;
-using Entities.Abstract;
 
 namespace Domain
 {

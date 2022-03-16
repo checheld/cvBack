@@ -16,16 +16,25 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("universities/add")]
-        public async Task<IActionResult> AddUniversity([FromBody] University university)
+        public async Task<IActionResult> AddUniversity([FromBody] List<University> university)
         {
-            try
+            if (university != null)
             {
-                return Ok(await _universitiesService.AddUniversity(university));
+                var universities = new List<University>();
+                foreach (University i in university)
+                {
+                    try
+                    {
+                        universities.Add(await _universitiesService.AddUniversity(i));
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest(ex.Message);
+                    }
+                }
+                return Ok(universities);
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return null;
         }
 
         [HttpPut]

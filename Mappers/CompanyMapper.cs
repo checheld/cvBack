@@ -22,7 +22,6 @@ namespace Mappers
         public static Company ToDomain(CompanyEntity companyEntity)
         {
             Company company = new Company();
-
             if (companyEntity != null)
             {
                 company.Name = companyEntity.Name;

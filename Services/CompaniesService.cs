@@ -1,9 +1,7 @@
-﻿using Data;
-using Data.Repositories.Abstract;
+﻿using Data.Repositories.Abstract;
 using Domain;
 using Entities;
 using Mappers;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Services.Abstract;
 
@@ -78,9 +76,9 @@ namespace Services
             try
             {
                 List<CompanyEntity> roomEntityList = await _companiesRepository.GetAllCompanies();
-                List<Company> roomDTOList = new List<Company>();
-                roomEntityList.ForEach(x => roomDTOList.Add(CompanyMapper.ToDomain(x)));
-                return roomDTOList;
+                List<Company> roomDomainList = new List<Company>();
+                roomEntityList.ForEach(x => roomDomainList.Add(CompanyMapper.ToDomain(x)));
+                return roomDomainList;
             }
             catch (Exception ex)
             {

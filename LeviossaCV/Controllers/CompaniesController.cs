@@ -16,16 +16,26 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("companies/add")]
-        public async Task<IActionResult> AddCompany([FromBody] Company company)
+        public async Task<IActionResult> AddCompany([FromBody] List<Company> company)
         {
-            try
+            if (company != null)
             {
-                return Ok(await _companiesService.AddCompany(company));
+                var companies = new List<Company>();
+                foreach (Company i in company)
+                {
+                    try
+                    {
+                        companies.Add(await _companiesService.AddCompany(i));
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest(ex.Message);
+                    }
+                }
+                return Ok(companies);
+
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return null;
         }
 
         [HttpPut]
