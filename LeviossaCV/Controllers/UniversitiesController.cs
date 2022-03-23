@@ -1,6 +1,5 @@
 ﻿using Domain;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using Services.Abstract;
 
 namespace API.Controllers
@@ -73,6 +72,20 @@ namespace API.Controllers
             try
             {
                 return Ok(await _universitiesService.GetUniversityById(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("universities/search/{search}")]
+        public async Task<IActionResult> GetUniversitiesBySearch(string search)
+        {
+            try
+            {
+                return Ok(await _universitiesService.GetUniversitiesBySearch(search));
             }
             catch (Exception ex)
             {

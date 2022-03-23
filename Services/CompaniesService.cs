@@ -58,6 +58,18 @@ namespace Services
             }
         }
 
+        public async Task<List<Company>> GetCompaniesBySearch(string search)
+        {
+            try
+            {
+                return CompanyMapper.ToDomainList(await _companiesRepository.GetCompaniesBySearch(search));
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public async Task<Company> UpdateCompany(Company company)
         {
             try
@@ -75,10 +87,10 @@ namespace Services
         {
             try
             {
-                List<CompanyEntity> roomEntityList = await _companiesRepository.GetAllCompanies();
-                List<Company> roomDomainList = new List<Company>();
-                roomEntityList.ForEach(x => roomDomainList.Add(CompanyMapper.ToDomain(x)));
-                return roomDomainList;
+                List<CompanyEntity> companyEntityList = await _companiesRepository.GetAllCompanies();
+                List<Company> companyDomainList = new List<Company>();
+                companyEntityList.ForEach(x => companyDomainList.Add(CompanyMapper.ToDomain(x)));
+                return companyDomainList;
             }
             catch (Exception ex)
             {

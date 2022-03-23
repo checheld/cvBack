@@ -47,14 +47,23 @@ namespace Data.Repositories
 
         public async Task<CompanyEntity> GetCompanyById(int id)
         {
-            var company = await db.Companies.SingleOrDefaultAsync(x => x.Id == id);
-            if (company != null)
-            {
-                return company;
-            }
-            return null;
+            return await db.Companies.SingleOrDefaultAsync(x => x.Id == id);
         }
 
+        public async Task<List<CompanyEntity>> GetCompaniesBySearch(string search)
+        {
+            try
+            {
+                return await db.Companies
+                    .Where(comp => comp.Name.Contains(search))
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw ex;
+            }
+        }
         public async Task<CompanyEntity> UpdateCompany(CompanyEntity company)
         {
             try

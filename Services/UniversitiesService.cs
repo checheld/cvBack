@@ -59,6 +59,18 @@ namespace Services
             }
         }
 
+        public async Task<List<University>> GetUniversitiesBySearch(string search)
+        {
+            try
+            {
+                return UniversityMapper.ToDomainList(await _universitiesRepository.GetUniversitiesBySearch(search));
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public async Task<University> UpdateUniversity(University university)
         {
             try

@@ -33,5 +33,15 @@ namespace Mappers
             return null;
         }
 
+        public static List<Company> ToDomainList(List<CompanyEntity> companyEntity)
+        {
+            List<Company> companies = new List<Company>();
+            foreach (CompanyEntity comp in companyEntity)
+            {
+                companies.Add(ToDomain(comp));
+            }
+            return companies;
+        }
     }
 }
+

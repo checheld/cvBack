@@ -33,5 +33,14 @@ namespace Mappers
             }
             return null;
         }
+        public static List<University> ToDomainList(List<UniversityEntity> universityEntity)
+        {
+            List<University> universities = new List<University>();
+            foreach (UniversityEntity univer in universityEntity)
+            {
+                universities.Add(ToDomain(univer));
+            }
+            return universities;
+        }
     }
 }

@@ -55,6 +55,21 @@ namespace Data.Repositories
             return null;
         }
 
+        public async Task<List<UniversityEntity>> GetUniversitiesBySearch(string search)
+        {
+            try
+            {
+                return await db.Universities
+                    .Where(uni => uni.Name.Contains(search))
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw ex;
+            }
+        }
+
         public async Task<UniversityEntity> UpdateUniversity(UniversityEntity university)
         {
             try

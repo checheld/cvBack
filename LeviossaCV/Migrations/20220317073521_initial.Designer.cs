@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LeviossaCV.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20220303122224_initial")]
+    [Migration("20220317073521_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,14 +42,30 @@ namespace LeviossaCV.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Companies");
+                });
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2022, 3, 3, 15, 22, 24, 963, DateTimeKind.Local).AddTicks(1336),
-                            Name = "qwerty"
-                        });
+            modelBuilder.Entity("Entities.TechnologyEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Technologies");
                 });
 
             modelBuilder.Entity("Entities.UniversityEntity", b =>
@@ -70,14 +86,6 @@ namespace LeviossaCV.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Universities");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2022, 3, 3, 15, 22, 24, 964, DateTimeKind.Local).AddTicks(8715),
-                            Name = "asdfg"
-                        });
                 });
 #pragma warning restore 612, 618
         }

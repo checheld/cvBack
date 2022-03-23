@@ -4,6 +4,7 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LeviossaCV.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20220317122742_AddedCompaniesToUserRelation")]
+    partial class AddedCompaniesToUserRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,29 +47,6 @@ namespace LeviossaCV.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Companies");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 10,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "1111111",
-                            UserId = 100000
-                        },
-                        new
-                        {
-                            Id = 20,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "22222222",
-                            UserId = 100000
-                        },
-                        new
-                        {
-                            Id = 30,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "33333333",
-                            UserId = 100000
-                        });
                 });
 
             modelBuilder.Entity("Entities.TechnologyEntity", b =>
@@ -131,14 +110,6 @@ namespace LeviossaCV.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 100000,
-                            CreatedAt = new DateTime(2022, 3, 17, 15, 53, 24, 49, DateTimeKind.Local).AddTicks(1583),
-                            Name = "User1"
-                        });
                 });
 
             modelBuilder.Entity("Entities.CompanyEntity", b =>

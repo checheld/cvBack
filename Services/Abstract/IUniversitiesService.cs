@@ -1,6 +1,4 @@
-﻿
-using Domain;
-using Entities;
+﻿using Domain;
 
 namespace Services.Abstract
 {
@@ -9,6 +7,7 @@ namespace Services.Abstract
         Task<University> AddUniversity(University university);
         Task<string> DeleteUniversityById(int id);
         Task<University> GetUniversityById(int id);
+        Task<List<University>> GetUniversitiesBySearch(string search);
         Task<University> UpdateUniversity(University company);
         Task<List<University>> GetAllUniversities();
     }
