@@ -29,6 +29,12 @@ builder.Services.AddTransient<IUniversitiesRepository, UniversitiesRepository>()
 builder.Services.AddTransient<ITechnologiesService, TechnologiesService>();
 builder.Services.AddTransient<ITechnologiesRepository, TechnologiesRepository>();
 
+builder.Services.AddTransient<IProjectsService, ProjectsService>();
+builder.Services.AddTransient<IProjectsRepository, ProjectsRepository>();
+
+builder.Services.AddTransient<IUsersService, UsersService>();
+builder.Services.AddTransient<IUsersRepository, UsersRepository>();
+
 var app = builder.Build();
 
 app.UseRouting();

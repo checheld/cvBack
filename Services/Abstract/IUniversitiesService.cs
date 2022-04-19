@@ -8,7 +8,7 @@ namespace Services.Abstract
         Task<string> DeleteUniversityById(int id);
         Task<University> GetUniversityById(int id);
         Task<List<University>> GetUniversitiesBySearch(string search);
-        Task<University> UpdateUniversity(University company);
+        Task<University> UpdateUniversity(University university);
         Task<List<University>> GetAllUniversities();
     }
 }

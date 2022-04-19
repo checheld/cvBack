@@ -15,6 +15,12 @@ namespace Mappers
                 technologyEntity.Id = technology.Id;
                 technologyEntity.CreatedAt = DateTime.Now;
                 technologyEntity.Type = technology.Type;
+
+                if (technology.ProjectList != null)
+                    technologyEntity.ProjectList = ProjectMapper.ToEntityList(technology.ProjectList);
+                else
+                    technologyEntity.ProjectList = new List<ProjectEntity>();
+
                 return technologyEntity;
             }
             return null;
@@ -30,6 +36,11 @@ namespace Mappers
                 technology.Id = technologyEntity.Id;
                 technology.Type = technologyEntity.Type;
 
+                if (technologyEntity.ProjectList != null)
+                    technology.ProjectList = ProjectMapper.ToDomainList(technologyEntity.ProjectList);
+                else
+                    technology.ProjectList = new List<Project>();
+
                 return technology;
             }
             return null;
@@ -41,6 +52,16 @@ namespace Mappers
             foreach (TechnologyEntity tech in technologyEntity)
             {
                 technologies.Add(ToDomain(tech));
+            }
+            return technologies;
+        }
+
+        public static List<TechnologyEntity> ToEntityList(List<Technology> technology)
+        {
+            List<TechnologyEntity> technologies = new List<TechnologyEntity>();
+            foreach (Technology tech in technology)
+            {
+                technologies.Add(ToEntity(tech));
             }
             return technologies;
         }
