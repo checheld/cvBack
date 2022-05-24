@@ -5,7 +5,7 @@ namespace Mappers
 {
     public static class ProjectMapper
     {
-        public static ProjectEntity ToEntity(Project project)
+        public static ProjectEntity ToEntity(ProjectDTO project)
         {
             ProjectEntity projectEntity = new ProjectEntity();
             if (project != null)
@@ -29,9 +29,9 @@ namespace Mappers
             return null;
         }
 
-        public static Project ToDomain(ProjectEntity projectEntity)
+        public static ProjectDTO ToDomain(ProjectEntity projectEntity)
         {
-            Project project = new Project();
+            ProjectDTO project = new ProjectDTO();
             if (projectEntity != null)
             {
                 project.Name = projectEntity.Name;
@@ -46,16 +46,16 @@ namespace Mappers
                 if (projectEntity.TechnologyList != null)
                     project.TechnologyList = TechnologyMapper.ToDomainList(projectEntity.TechnologyList);
                 else
-                    project.TechnologyList = new List<Technology>();
+                    project.TechnologyList = new List<TechnologyDTO>();
 
                 return project;
             }
             return null;
         }
 
-        public static List<Project> ToDomainList(List<ProjectEntity> projectEntity)
+        public static List<ProjectDTO> ToDomainList(List<ProjectEntity> projectEntity)
         {
-            List<Project> projects = new List<Project>();
+            List<ProjectDTO> projects = new List<ProjectDTO>();
             foreach (ProjectEntity project in projectEntity)
             {
                 projects.Add(ToDomain(project));
@@ -63,10 +63,10 @@ namespace Mappers
             return projects;
         }
 
-        public static List<ProjectEntity> ToEntityList(List<Project> project)
+        public static List<ProjectEntity> ToEntityList(List<ProjectDTO> project)
         {
             List<ProjectEntity> projects = new List<ProjectEntity>();
-            foreach (Project proj in project)
+            foreach (ProjectDTO proj in project)
             {
                 projects.Add(ToEntity(proj));
             }

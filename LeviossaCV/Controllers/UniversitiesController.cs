@@ -15,12 +15,12 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("universities/add")]
-        public async Task<IActionResult> AddUniversity([FromBody] List<University> university)
+        public async Task<IActionResult> AddUniversity([FromBody] List<UniversityDTO> university)
         {
             if (university != null)
             {
-                var universities = new List<University>();
-                foreach (University i in university)
+                var universities = new List<UniversityDTO>();
+                foreach (UniversityDTO i in university)
                 {
                     try
                     {
@@ -38,7 +38,7 @@ namespace API.Controllers
 
         [HttpPut]
         [Route("universities/{id}")]
-        public async Task<IActionResult> UpdateUniversity([FromBody] University university, int id)
+        public async Task<IActionResult> UpdateUniversity([FromBody] UniversityDTO university, int id)
         {
             university.Id = id;
             try

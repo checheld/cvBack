@@ -5,7 +5,7 @@ namespace Mappers
 {
     public static class CompanyMapper
     {
-        public static CompanyEntity ToEntity(Company company)
+        public static CompanyEntity ToEntity(CompanyDTO company)
         {
             CompanyEntity companyEntity = new CompanyEntity();
             if (company != null)
@@ -19,9 +19,9 @@ namespace Mappers
             return null;
         }
 
-        public static Company ToDomain(CompanyEntity companyEntity)
+        public static CompanyDTO ToDomain(CompanyEntity companyEntity)
         {
-            Company company = new Company();
+            CompanyDTO company = new CompanyDTO();
             if (companyEntity != null)
             {
                 company.Name = companyEntity.Name;
@@ -33,9 +33,9 @@ namespace Mappers
             return null;
         }
 
-        public static List<Company> ToDomainList(List<CompanyEntity> companyEntity)
+        public static List<CompanyDTO> ToDomainList(List<CompanyEntity> companyEntity)
         {
-            List<Company> companies = new List<Company>();
+            List<CompanyDTO> companies = new List<CompanyDTO>();
             foreach (CompanyEntity comp in companyEntity)
             {
                 companies.Add(ToDomain(comp));

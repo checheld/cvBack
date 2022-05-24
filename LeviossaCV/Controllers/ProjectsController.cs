@@ -16,7 +16,7 @@ namespace LeviossaCV.Controllers
         [HttpPost]
         [Route("projects/add")]
 
-        public async Task<IActionResult> AddProject([FromBody] Project project)
+        public async Task<IActionResult> AddProject([FromBody] ProjectDTO project)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace LeviossaCV.Controllers
 
         [HttpPut]
         [Route("projects/{id}")]
-        public async Task<IActionResult> UpdateProject([FromBody] Project project, int id)
+        public async Task<IActionResult> UpdateProject([FromBody] ProjectDTO project, int id)
         {
             project.Id = id;
             try
@@ -73,7 +73,7 @@ namespace LeviossaCV.Controllers
 
         [HttpPost]
         [Route("projects/search")]
-        public async Task<IActionResult> GetProjectsBySearch([FromBody] SearchProjects searchProjects)
+        public async Task<IActionResult> GetProjectsBySearch([FromBody] SearchProjectsDTO searchProjects)
         {
             try
             {

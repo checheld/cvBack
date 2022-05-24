@@ -5,7 +5,7 @@ namespace Mappers
 {
     public static class EducationMapper
     {
-        public static EducationEntity ToEntity(Education education)
+        public static EducationEntity ToEntity(EducationDTO education)
         {
             EducationEntity educationEntity = new EducationEntity();
             if (education != null)
@@ -25,12 +25,13 @@ namespace Mappers
             return null;
         }
 
-        public static Education ToDomain(EducationEntity educationEntity)
+        public static EducationDTO ToDomain(EducationEntity educationEntity)
         {
-            Education education = new Education();
+            EducationDTO education = new EducationDTO();
             if (educationEntity != null)
             {
                 education.University = UniversityMapper.ToDomain(educationEntity.University);
+                education.UniversityId = educationEntity.UniversityId;
                 education.Speciality = educationEntity.Speciality;
                 education.StartDate = educationEntity.StartDate;
                 education.EndDate = educationEntity.EndDate;
@@ -42,9 +43,9 @@ namespace Mappers
             return null;
         }
 
-        public static List<Education> ToDomainList(List<EducationEntity> educationEntity)
+        public static List<EducationDTO> ToDomainList(List<EducationEntity> educationEntity)
         {
-            List<Education> educations = new List<Education>();
+            List<EducationDTO> educations = new List<EducationDTO>();
             foreach (EducationEntity education in educationEntity)
             {
                 educations.Add(ToDomain(education));
@@ -52,10 +53,10 @@ namespace Mappers
             return educations;
         }
 
-        public static List<EducationEntity> ToEntityList(List<Education> education)
+        public static List<EducationEntity> ToEntityList(List<EducationDTO> education)
         {
             List<EducationEntity> educations = new List<EducationEntity>();
-            foreach (Education e in education)
+            foreach (EducationDTO e in education)
             {
                 educations.Add(ToEntity(e));
             }

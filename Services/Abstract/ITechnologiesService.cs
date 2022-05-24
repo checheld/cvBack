@@ -4,11 +4,11 @@ namespace Services.Abstract
 {
     public interface ITechnologiesService
     {
-        Task<Technology> AddTechnology(Technology technology);
+        Task<TechnologyDTO> AddTechnology(TechnologyDTO technology);
         Task<string> DeleteTechnologyById(int id);
-        Task<Technology> GetTechnologyById(int id);
-        Task<List<Technology>> GetTechnologiesBySearch(string search);
-        Task<Technology> UpdateTechnology(Technology technology);
-        Task<List<Technology>> GetAllTechnologies();
+        Task<TechnologyDTO> GetTechnologyById(int id);
+        Task<List<TechnologyDTO>> GetTechnologiesBySearch(string search);
+        Task<TechnologyDTO> UpdateTechnology(TechnologyDTO technology);
+        Task<List<TechnologyDTO>> GetAllTechnologies();
     }
 }

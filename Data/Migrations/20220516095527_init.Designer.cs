@@ -4,16 +4,18 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace LeviossaCV.Migrations
+namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20220516095527_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,6 +44,31 @@ namespace LeviossaCV.Migrations
                     b.ToTable("Companies");
                 });
 
+            modelBuilder.Entity("Entities.CVEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CVName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CVs");
+                });
+
             modelBuilder.Entity("Entities.EducationEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -66,7 +93,6 @@ namespace LeviossaCV.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("UniversityId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int?>("UserId")
@@ -79,6 +105,48 @@ namespace LeviossaCV.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Educations");
+                });
+
+            modelBuilder.Entity("Entities.ProjectCVEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("CVId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EndDate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Position")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StartDate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CVId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectCVs");
                 });
 
             modelBuilder.Entity("Entities.ProjectEntity", b =>
@@ -226,7 +294,6 @@ namespace LeviossaCV.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int?>("CompanyId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
@@ -260,13 +327,20 @@ namespace LeviossaCV.Migrations
                     b.ToTable("WorkExperiences");
                 });
 
+            modelBuilder.Entity("Entities.CVEntity", b =>
+                {
+                    b.HasOne("Entities.UserEntity", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Entities.EducationEntity", b =>
                 {
                     b.HasOne("Entities.UniversityEntity", "University")
                         .WithMany("EducationUniversityList")
-                        .HasForeignKey("UniversityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UniversityId");
 
                     b.HasOne("Entities.UserEntity", "User")
                         .WithMany("EducationList")
@@ -275,6 +349,21 @@ namespace LeviossaCV.Migrations
                     b.Navigation("University");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Entities.ProjectCVEntity", b =>
+                {
+                    b.HasOne("Entities.CVEntity", "CV")
+                        .WithMany("ProjectCVList")
+                        .HasForeignKey("CVId");
+
+                    b.HasOne("Entities.ProjectEntity", "Project")
+                        .WithMany("CVProjectCVList")
+                        .HasForeignKey("ProjectId");
+
+                    b.Navigation("CV");
+
+                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("Entities.ProjectTechnology", b =>
@@ -319,9 +408,7 @@ namespace LeviossaCV.Migrations
                 {
                     b.HasOne("Entities.CompanyEntity", "Company")
                         .WithMany("WorkExperienceCompanyList")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CompanyId");
 
                     b.HasOne("Entities.UserEntity", "User")
                         .WithMany("WorkExperienceList")
@@ -337,8 +424,15 @@ namespace LeviossaCV.Migrations
                     b.Navigation("WorkExperienceCompanyList");
                 });
 
+            modelBuilder.Entity("Entities.CVEntity", b =>
+                {
+                    b.Navigation("ProjectCVList");
+                });
+
             modelBuilder.Entity("Entities.ProjectEntity", b =>
                 {
+                    b.Navigation("CVProjectCVList");
+
                     b.Navigation("ProjectTechnology");
                 });
 

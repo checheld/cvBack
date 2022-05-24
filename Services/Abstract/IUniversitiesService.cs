@@ -4,11 +4,11 @@ namespace Services.Abstract
 {
     public interface IUniversitiesService
     {
-        Task<University> AddUniversity(University university);
+        Task<UniversityDTO> AddUniversity(UniversityDTO university);
         Task<string> DeleteUniversityById(int id);
-        Task<University> GetUniversityById(int id);
-        Task<List<University>> GetUniversitiesBySearch(string search);
-        Task<University> UpdateUniversity(University university);
-        Task<List<University>> GetAllUniversities();
+        Task<UniversityDTO> GetUniversityById(int id);
+        Task<List<UniversityDTO>> GetUniversitiesBySearch(string search);
+        Task<UniversityDTO> UpdateUniversity(UniversityDTO university);
+        Task<List<UniversityDTO>> GetAllUniversities();
     }
 }

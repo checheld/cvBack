@@ -4,11 +4,11 @@ namespace Services.Abstract
 {
     public interface IProjectsService
     {
-        Task<Project> AddProject(Project project);
+        Task<ProjectDTO> AddProject(ProjectDTO project);
         Task<string> DeleteProjectById(int id);
-        Task<Project> GetProjectById(int id);
-        Task<List<Project>> GetProjectsBySearch(SearchProjects searchProjects);
-        Task<Project> UpdateProject(Project project);
-        Task<List<Project>> GetAllProjects();
+        Task<ProjectDTO> GetProjectById(int id);
+        Task<List<ProjectDTO>> GetProjectsBySearch(SearchProjectsDTO searchProjects);
+        Task<ProjectDTO> UpdateProject(ProjectDTO project);
+        Task<List<ProjectDTO>> GetAllProjects();
     }
 }

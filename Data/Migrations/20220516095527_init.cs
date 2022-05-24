@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace LeviossaCV.Migrations
+namespace Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -111,12 +111,32 @@ namespace LeviossaCV.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CVs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CVName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CVs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CVs_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Educations",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UniversityId = table.Column<int>(type: "int", nullable: false),
+                    UniversityId = table.Column<int>(type: "int", nullable: true),
                     Speciality = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StartDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EndDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -130,8 +150,7 @@ namespace LeviossaCV.Migrations
                         name: "FK_Educations_Universities_UniversityId",
                         column: x => x.UniversityId,
                         principalTable: "Universities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Educations_Users_UserId",
                         column: x => x.UserId,
@@ -169,7 +188,7 @@ namespace LeviossaCV.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CompanyId = table.Column<int>(type: "int", nullable: false),
+                    CompanyId = table.Column<int>(type: "int", nullable: true),
                     Position = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StartDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EndDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -184,14 +203,47 @@ namespace LeviossaCV.Migrations
                         name: "FK_WorkExperiences_Companies_CompanyId",
                         column: x => x.CompanyId,
                         principalTable: "Companies",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_WorkExperiences_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id");
                 });
+
+            migrationBuilder.CreateTable(
+                name: "ProjectCVs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProjectId = table.Column<int>(type: "int", nullable: true),
+                    Position = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StartDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EndDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CVId = table.Column<int>(type: "int", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectCVs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProjectCVs_CVs_CVId",
+                        column: x => x.CVId,
+                        principalTable: "CVs",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ProjectCVs_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CVs_UserId",
+                table: "CVs",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Educations_UniversityId",
@@ -202,6 +254,16 @@ namespace LeviossaCV.Migrations
                 name: "IX_Educations_UserId",
                 table: "Educations",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectCVs_CVId",
+                table: "ProjectCVs",
+                column: "CVId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectCVs_ProjectId",
+                table: "ProjectCVs",
+                column: "ProjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectTechnology_TechnologyId",
@@ -230,6 +292,9 @@ namespace LeviossaCV.Migrations
                 name: "Educations");
 
             migrationBuilder.DropTable(
+                name: "ProjectCVs");
+
+            migrationBuilder.DropTable(
                 name: "ProjectTechnology");
 
             migrationBuilder.DropTable(
@@ -240,6 +305,9 @@ namespace LeviossaCV.Migrations
 
             migrationBuilder.DropTable(
                 name: "Universities");
+
+            migrationBuilder.DropTable(
+                name: "CVs");
 
             migrationBuilder.DropTable(
                 name: "Projects");

@@ -4,26 +4,44 @@ using Entities;
 using Mappers;
 using Microsoft.Extensions.DependencyInjection;
 using Services.Abstract;
+using AutoMapper;
 
 namespace Services
 {
     public class CompaniesService : ICompaniesService
     {
         private readonly ICompaniesRepository _companiesRepository;
-        public CompaniesService(IServiceProvider _serviceProvider)
+        private readonly IMapper _mapper;
+
+        public CompaniesService(IMapper mapper, IServiceProvider _serviceProvider)
         {
+            _mapper = mapper;
             _companiesRepository = _serviceProvider.GetService<ICompaniesRepository>();
         }
 
-        public async Task<Company> AddCompany(Company company)
+        // autoMapper
+        public class AppMappingCompany : Profile
+        {
+            public AppMappingCompany()
+            {
+                CreateMap<CompanyDTO, CompanyEntity>().ReverseMap();
+            }
+        }
+        //
+
+        public async Task<CompanyDTO> AddCompany(CompanyDTO company)
         {
             try
             {
-                CompanyEntity newCompany = CompanyMapper.ToEntity(company);
+                /*CompanyEntity newCompany = CompanyMapper.ToEntity(company);*/
+                var newCompany = _mapper.Map<CompanyEntity>(company);
+                newCompany.CreatedAt = DateTime.Now;
                 CompanyEntity c = await _companiesRepository.AddCompany(newCompany);
                 if (c != null)
                 {
-                    Company item = CompanyMapper.ToDomain(c);
+                    /*CompanyDTO item = CompanyMapper.ToDomain(c);*/
+                    var item = _mapper.Map<CompanyDTO>(c);
+
                     return item;
                 };
             }
@@ -45,36 +63,46 @@ namespace Services
                 return ex.Message;
             }
         }
-
-        public async Task<Company> GetCompanyById(int id)
+        
+        public async Task<CompanyDTO> GetCompanyById(int id)
         {
             try
             {
-                return CompanyMapper.ToDomain(await _companiesRepository.GetCompanyById(id));
+                /*return CompanyMapper.ToDomain(await _companiesRepository.GetCompanyById(id));*/
+                return _mapper.Map<CompanyDTO>(await _companiesRepository.GetCompanyById(id));
             }
             catch (Exception ex)
             {
                 return null;
             }
         }
-
-        public async Task<List<Company>> GetCompaniesBySearch(string search)
+        
+        public async Task<List<CompanyDTO>> GetCompaniesBySearch(string search)
         {
             try
             {
-                return CompanyMapper.ToDomainList(await _companiesRepository.GetCompaniesBySearch(search));
+                /*return CompanyMapper.ToDomainList(await _companiesRepository.GetCompaniesBySearch(search));*/
+
+                var searchCompanies = await _companiesRepository.GetCompaniesBySearch(search);
+                List<CompanyDTO> companies = new List<CompanyDTO>();
+                foreach (CompanyEntity company in searchCompanies)
+                {
+                    companies.Add(_mapper.Map<CompanyDTO>(company));
+                }
+                return companies;
             }
             catch (Exception ex)
             {
                 return null;
             }
         }
-
-        public async Task<Company> UpdateCompany(Company company)
+        
+        public async Task<CompanyDTO> UpdateCompany(CompanyDTO company)
         {
             try
             {
-                return CompanyMapper.ToDomain(await _companiesRepository.UpdateCompany(CompanyMapper.ToEntity(company)));
+                /*return CompanyMapper.ToDomain(await _companiesRepository.UpdateCompany(CompanyMapper.ToEntity(company)));*/
+                return _mapper.Map<CompanyDTO>(await _companiesRepository.UpdateCompany(_mapper.Map<CompanyEntity>(company)));
             }
             catch (Exception ex)
             {
@@ -83,13 +111,14 @@ namespace Services
             }
         }
 
-        public async Task<List<Company>> GetAllCompanies()
+        public async Task<List<CompanyDTO>> GetAllCompanies()
         {
             try
             {
                 List<CompanyEntity> companyEntityList = await _companiesRepository.GetAllCompanies();
-                List<Company> companyDomainList = new List<Company>();
-                companyEntityList.ForEach(x => companyDomainList.Add(CompanyMapper.ToDomain(x)));
+                List<CompanyDTO> companyDomainList = new List<CompanyDTO>();
+                /*companyEntityList.ForEach(x => companyDomainList.Add(CompanyMapper.ToDomain(x)));*/
+                companyEntityList.ForEach(x => companyDomainList.Add(_mapper.Map<CompanyDTO>(x)));
                 return companyDomainList;
             }
             catch (Exception ex)

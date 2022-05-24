@@ -15,7 +15,7 @@ namespace LeviossaCV.Controllers
 
         [HttpPost]
         [Route("user/add")]
-        public async Task<IActionResult> AddUser([FromBody] User user)
+        public async Task<IActionResult> AddUser([FromBody] UserDTO user)
         {
             try
             {
@@ -29,7 +29,7 @@ namespace LeviossaCV.Controllers
 
         [HttpPut]
         [Route("users/{id}")]
-        public async Task<IActionResult> UpdateUser([FromBody] User user, int id)
+        public async Task<IActionResult> UpdateUser([FromBody] UserDTO user, int id)
         {
             user.Id = id;
             try

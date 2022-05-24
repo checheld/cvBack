@@ -1,7 +1,7 @@
-﻿using Data.Repositories.Abstract;
+﻿using AutoMapper;
+using Data.Repositories.Abstract;
 using Domain;
 using Entities;
-using LeviossaCV.Services.Models;
 using Mappers;
 using Microsoft.Extensions.DependencyInjection;
 using Services.Abstract;
@@ -12,21 +12,35 @@ namespace Services
     {
 
         private readonly IUsersRepository _usersRepository;
+        /*private readonly IMapper _mapper;*/
 
-        public UsersService(IServiceProvider _serviceProvider)
+        public UsersService(IMapper mapper, IServiceProvider _serviceProvider)
         {
+            /*_mapper = mapper;*/
             _usersRepository = _serviceProvider.GetService<IUsersRepository>();
         }
 
-        public async Task<User> AddUser(User user)
+        // autoMapper
+        /*public class AppMappingProfile : Profile
+        {
+            public AppMappingProfile()
+            {
+                CreateMap<UserDTO, UserEntity>().ReverseMap();
+            }
+        }*/
+        //
+
+        public async Task<UserDTO> AddUser(UserDTO user)
         {
             try
             {
                 UserEntity newUser = UserMapper.ToEntity(user);
+                /*var newUser = _mapper.Map<UserEntity>(user);*/
                 UserEntity u = await _usersRepository.AddUser(newUser);
                 if (u != null)
                 {
-                    User item = UserMapper.ToDomain(u);
+                    UserDTO item = UserMapper.ToDomain(u);
+                    /*var item = _mapper.Map<UserDTO>(u);*/
                     return item;
                 };
             }
@@ -54,31 +68,40 @@ namespace Services
             }
         }
 
-        public async Task<User> GetUserById(int id)
+        public async Task<UserDTO> GetUserById(int id)
         {
             try
             {
                 return UserMapper.ToDomain(await _usersRepository.GetUserById(id));
+                /*return _mapper.Map<UserDTO>(await _usersRepository.GetUserById(id));*/
             }
             catch (Exception ex)
             {
                 return null;
             }
         }
-
-        public async Task<List<User>> GetUsersBySearch(string search)
+        
+        public async Task<List<UserDTO>> GetUsersBySearch(string search)
         {
             try
             {
                 return UserMapper.ToDomainList(await _usersRepository.GetUsersBySearch(search));
+
+                /*var searchUsers = await _usersRepository.GetUsersBySearch(search);
+                List<UserDTO> users = new List<UserDTO>();
+                foreach (UserEntity user in searchUsers)
+                {
+                    _mapper.Map<UserEntity>(user);
+                }
+                return users;*/
             }
             catch (Exception ex)
             {
                 return null;
             }
         }
-
-        public async Task<User> UpdateUser(User user)
+        
+        public async Task<UserDTO> UpdateUser(UserDTO user)
         {
             try
             {
@@ -88,6 +111,7 @@ namespace Services
                 await this._usersRepository.RemoveAllWorkExperiences(getUser.Id);
 
                 return UserMapper.ToDomain(await _usersRepository.UpdateUser(UserMapper.ToEntity(user)));
+                /*return _mapper.Map<UserDTO>(await _usersRepository.UpdateUser(UserMapper.ToEntity(user)));*/
             }
             catch (Exception ex)
             {
@@ -95,14 +119,16 @@ namespace Services
                 return null;
             }
         }
-
-        public async Task<List<User>> GetAllUsers()
+        // here
+        public async Task<List<UserDTO>> GetAllUsers()
         {
             try
             {
                 List<UserEntity> userEntityList = await _usersRepository.GetAllUsers();
-                List<User> userDomainList = new List<User>();
+                List<UserDTO> userDomainList = new List<UserDTO>();
                 userEntityList.ForEach(x => userDomainList.Add(UserMapper.ToDomain(x)));
+                /*userEntityList.ForEach(x => userDomainList.Add(_mapper.Map<UserDTO>(x)));*/
+               
                 return userDomainList;
             }
             catch (Exception ex)

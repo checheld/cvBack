@@ -5,7 +5,7 @@ namespace Mappers
 {
     public static class TechnologyMapper
     {
-        public static TechnologyEntity ToEntity(Technology technology)
+        public static TechnologyEntity ToEntity(TechnologyDTO technology)
         {
             TechnologyEntity technologyEntity = new TechnologyEntity();
 
@@ -26,9 +26,9 @@ namespace Mappers
             return null;
         }
 
-        public static Technology ToDomain(TechnologyEntity technologyEntity)
+        public static TechnologyDTO ToDomain(TechnologyEntity technologyEntity)
         {
-            Technology technology = new Technology();
+            TechnologyDTO technology = new TechnologyDTO();
             if (technologyEntity != null)
             {
                 technology.Name = technologyEntity.Name;
@@ -39,16 +39,16 @@ namespace Mappers
                 if (technologyEntity.ProjectList != null)
                     technology.ProjectList = ProjectMapper.ToDomainList(technologyEntity.ProjectList);
                 else
-                    technology.ProjectList = new List<Project>();
+                    technology.ProjectList = new List<ProjectDTO>();
 
                 return technology;
             }
             return null;
         }
 
-        public static List<Technology> ToDomainList(List<TechnologyEntity> technologyEntity)
+        public static List<TechnologyDTO> ToDomainList(List<TechnologyEntity> technologyEntity)
         {
-            List<Technology> technologies = new List<Technology>();
+            List<TechnologyDTO> technologies = new List<TechnologyDTO>();
             foreach (TechnologyEntity tech in technologyEntity)
             {
                 technologies.Add(ToDomain(tech));
@@ -56,10 +56,10 @@ namespace Mappers
             return technologies;
         }
 
-        public static List<TechnologyEntity> ToEntityList(List<Technology> technology)
+        public static List<TechnologyEntity> ToEntityList(List<TechnologyDTO> technology)
         {
             List<TechnologyEntity> technologies = new List<TechnologyEntity>();
-            foreach (Technology tech in technology)
+            foreach (TechnologyDTO tech in technology)
             {
                 technologies.Add(ToEntity(tech));
             }

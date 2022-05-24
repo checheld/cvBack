@@ -5,7 +5,7 @@ namespace Mappers
 {
     public static class UserMapper
     {
-        public static UserEntity ToEntity(User user)
+        public static UserEntity ToEntity(UserDTO user)
         {
             UserEntity userEntity = new UserEntity();
             if (user != null)
@@ -36,9 +36,9 @@ namespace Mappers
             return null;
         }
 
-        public static User ToDomain(UserEntity userEntity)
+        public static UserDTO ToDomain(UserEntity userEntity)
         {
-            User user = new User();
+            UserDTO user = new UserDTO();
             if (userEntity != null)
             {
                 user.FirstName = userEntity.FirstName;
@@ -50,26 +50,26 @@ namespace Mappers
                 if (userEntity.TechnologyList != null)
                     user.TechnologyList = TechnologyMapper.ToDomainList(userEntity.TechnologyList);
                 else
-                    user.TechnologyList = new List<Technology>();
+                    user.TechnologyList = new List<TechnologyDTO>();
 
                 if (userEntity.EducationList != null)
                     user.EducationList = EducationMapper.ToDomainList(userEntity.EducationList);
                 else
-                    user.EducationList = new List<Education>();
+                    user.EducationList = new List<EducationDTO>();
 
                 if (userEntity.WorkExperienceList != null)
                     user.WorkExperienceList = WorkExperienceMapper.ToDomainList(userEntity.WorkExperienceList);
                 else
-                    user.WorkExperienceList = new List<WorkExperience>();
+                    user.WorkExperienceList = new List<WorkExperienceDTO>();
 
                 return user;
             }
             return null;
         }
 
-        public static List<User> ToDomainList(List<UserEntity> userEntity)
+        public static List<UserDTO> ToDomainList(List<UserEntity> userEntity)
         {
-            List<User> users = new List<User>();
+            List<UserDTO> users = new List<UserDTO>();
             foreach (UserEntity user in userEntity)
             {
                 users.Add(ToDomain(user));
@@ -77,10 +77,10 @@ namespace Mappers
             return users;
         }
 
-        public static List<UserEntity> ToEntityList(List<User> user)
+        public static List<UserEntity> ToEntityList(List<UserDTO> user)
         {
             List<UserEntity> users = new List<UserEntity>();
-            foreach (User u in user)
+            foreach (UserDTO u in user)
             {
                 users.Add(ToEntity(u));
             }

@@ -15,7 +15,7 @@ namespace LeviossaCV.Controllers
 
         [HttpPost]
         [Route("technologies/add")]
-        public async Task<IActionResult> AddTechnology([FromBody] Technology technology)
+        public async Task<IActionResult> AddTechnology([FromBody] TechnologyDTO technology)
         {
             try
             {
@@ -29,7 +29,7 @@ namespace LeviossaCV.Controllers
 
         [HttpPut]
         [Route("technologies/{id}")]
-        public async Task<IActionResult> UpdateTechnology([FromBody] Technology technology, int id)
+        public async Task<IActionResult> UpdateTechnology([FromBody] TechnologyDTO technology, int id)
         {
             technology.Id = id;
             try

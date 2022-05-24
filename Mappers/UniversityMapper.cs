@@ -5,7 +5,7 @@ namespace Mappers
 {
     public static class UniversityMapper
     {
-        public static UniversityEntity ToEntity(University university)
+        public static UniversityEntity ToEntity(UniversityDTO university)
         {
             UniversityEntity universityEntity = new UniversityEntity();
            
@@ -20,9 +20,9 @@ namespace Mappers
                 return null;
         }
 
-        public static University ToDomain(UniversityEntity universityEntity)
+        public static UniversityDTO ToDomain(UniversityEntity universityEntity)
         {
-            University university = new University();
+            UniversityDTO university = new UniversityDTO();
             if (universityEntity != null) 
             {
                 university.Name = universityEntity.Name;
@@ -33,9 +33,9 @@ namespace Mappers
             }
             return null;
         }
-        public static List<University> ToDomainList(List<UniversityEntity> universityEntity)
+        public static List<UniversityDTO> ToDomainList(List<UniversityEntity> universityEntity)
         {
-            List<University> universities = new List<University>();
+            List<UniversityDTO> universities = new List<UniversityDTO>();
             foreach (UniversityEntity univer in universityEntity)
             {
                 universities.Add(ToDomain(univer));

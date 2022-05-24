@@ -4,11 +4,11 @@ namespace Services.Abstract
 {
     public interface ICompaniesService
     {
-        Task<Company> AddCompany(Company company);
+        Task<CompanyDTO> AddCompany(CompanyDTO company);
         Task<string> DeleteCompanyById(int id);
-        Task<Company> GetCompanyById(int id);
-        Task<List<Company>> GetCompaniesBySearch(string search);
-        Task<Company> UpdateCompany(Company company);
-        Task<List<Company>> GetAllCompanies();
+        Task<CompanyDTO> GetCompanyById(int id);
+        Task<List<CompanyDTO>> GetCompaniesBySearch(string search);
+        Task<CompanyDTO> UpdateCompany(CompanyDTO company);
+        Task<List<CompanyDTO>> GetAllCompanies();
     }
 }

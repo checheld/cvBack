@@ -5,7 +5,7 @@ namespace Mappers
 {
     public static class WorkExperienceMapper
     {
-        public static WorkExperienceEntity ToEntity(WorkExperience workExperience)
+        public static WorkExperienceEntity ToEntity(WorkExperienceDTO workExperience)
         {
             WorkExperienceEntity workExperienceEntity = new WorkExperienceEntity();
             if (workExperience != null)
@@ -24,12 +24,13 @@ namespace Mappers
             return null;
         }
 
-        public static WorkExperience ToDomain(WorkExperienceEntity workExperienceEntity)
+        public static WorkExperienceDTO ToDomain(WorkExperienceEntity workExperienceEntity)
         {
-            WorkExperience workExperience = new WorkExperience();
+            WorkExperienceDTO workExperience = new WorkExperienceDTO();
             if (workExperienceEntity != null)
             {
                 workExperience.Company = CompanyMapper.ToDomain(workExperienceEntity.Company);
+                workExperience.CompanyId = workExperienceEntity.CompanyId;
                 workExperience.Position = workExperienceEntity.Position;
                 workExperience.StartDate = workExperienceEntity.StartDate;
                 workExperience.EndDate = workExperienceEntity.EndDate;
@@ -42,9 +43,9 @@ namespace Mappers
             return null;
         }
 
-        public static List<WorkExperience> ToDomainList(List<WorkExperienceEntity> workExperienceEntity)
+        public static List<WorkExperienceDTO> ToDomainList(List<WorkExperienceEntity> workExperienceEntity)
         {
-            List<WorkExperience> workExperiences = new List<WorkExperience>();
+            List<WorkExperienceDTO> workExperiences = new List<WorkExperienceDTO>();
             foreach (WorkExperienceEntity workExperience in workExperienceEntity)
             {
                 workExperiences.Add(ToDomain(workExperience));
@@ -52,10 +53,10 @@ namespace Mappers
             return workExperiences;
         }
 
-        public static List<WorkExperienceEntity> ToEntityList(List<WorkExperience> workExperience)
+        public static List<WorkExperienceEntity> ToEntityList(List<WorkExperienceDTO> workExperience)
         {
             List<WorkExperienceEntity> workExperiences = new List<WorkExperienceEntity>();
-            foreach (WorkExperience w in workExperience)
+            foreach (WorkExperienceDTO w in workExperience)
             {
                 workExperiences.Add(ToEntity(w));
             }

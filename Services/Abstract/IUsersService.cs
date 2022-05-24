@@ -1,15 +1,14 @@
 ﻿using Domain;
-using LeviossaCV.Services.Models;
 
 namespace Services.Abstract
 {
     public interface IUsersService
     {
-        Task<User> AddUser(User user);
+        Task<UserDTO> AddUser(UserDTO user);
         Task<string> DeleteUserById(int id);
-        Task<User> GetUserById(int id);
-        Task<List<User>> GetUsersBySearch(string search);
-        Task<User> UpdateUser(User user);
-        Task<List<User>> GetAllUsers();
+        Task<UserDTO> GetUserById(int id);
+        Task<List<UserDTO>> GetUsersBySearch(string search);
+        Task<UserDTO> UpdateUser(UserDTO user);
+        Task<List<UserDTO>> GetAllUsers();
     }
 }

@@ -8,7 +8,6 @@ namespace Data.Repositories.Infrastructure
     {
         public void Configure(EntityTypeBuilder<TechnologyEntity> entityTypeBuilder)
         {
-            entityTypeBuilder.HasKey(x => x.Id);
             entityTypeBuilder.HasMany(x => x.UserList).WithMany(x => x.TechnologyList).UsingEntity<UserTechnologyEntity>
                 (
                     j => j

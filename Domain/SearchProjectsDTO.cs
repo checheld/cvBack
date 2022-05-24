@@ -1,7 +1,7 @@
 ﻿
 namespace Domain
 {
-    public class SearchProjects
+    public class SearchProjectsDTO
     {
         public string Name { get; set; }
         public string Type { get; set; }

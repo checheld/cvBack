@@ -36,7 +36,7 @@ namespace Data.Repositories
                 var educations = user.EducationList;
                 foreach (var education in educations)
                 {
-                    var findUniversity = await db.Universities.Where(x => x.Name == education.University.Name)
+                    var findUniversity = await db.Universities.Where(x => x.Id == education.UniversityId)
                     .FirstOrDefaultAsync();
                     var newEducation = new EducationEntity
                     {
@@ -54,7 +54,7 @@ namespace Data.Repositories
                 var workExperiences = user.WorkExperienceList;
                 foreach (var workExperience in workExperiences)
                 {
-                    var findCompany = await db.Companies.Where(x => x.Name == workExperience.Company.Name)
+                    var findCompany = await db.Companies.Where(x => x.Id == workExperience.CompanyId)
                     .FirstOrDefaultAsync();
                     var newWorkExperience = new WorkExperienceEntity
                     {
@@ -180,12 +180,12 @@ namespace Data.Repositories
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Description = user.Description,
-                    CreatedAt = user.CreatedAt,
                     Id = user.Id
                 };
+                db.Users.Update(newModel);
                 var technologies = user.TechnologyList;
                
-                var addedUser = await db.Users.Where(x => x.CreatedAt == newModel.CreatedAt)
+                var addedUser = await db.Users.Where(x => x.Id == newModel.Id)
                     .FirstOrDefaultAsync();
 
                 var educationList = new List<EducationEntity>();
@@ -248,7 +248,7 @@ namespace Data.Repositories
                 await db.UserTechnology.AddRangeAsync(links);
 
                 await db.SaveChangesAsync();
-                this.db.Users.Update(newModel);
+                
                 await db.SaveChangesAsync();
                 user.TechnologyList.Select(c => { c.UserList = null; return c; }).ToList();
 
