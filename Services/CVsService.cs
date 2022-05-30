@@ -4,13 +4,20 @@ using Entities;
 using Mappers;
 using Microsoft.Extensions.DependencyInjection;
 using Services.Abstract;
+using DinkToPdf;
+using Services.Utility;
+using DinkToPdf.Contracts;
 
 namespace Services
 {
     public class CVsService : ICVsService
     {
         private readonly ICVsRepository _CVsRepository;
-
+        private IConverter _converter;
+        public CVsService(IConverter converter)
+        {
+            _converter = converter;
+        }
         public CVsService(IServiceProvider _serviceProvider)
         {
             _CVsRepository = _serviceProvider.GetService<ICVsRepository>();
@@ -20,6 +27,32 @@ namespace Services
         {
             try
             {
+                //
+                var globalSettings = new GlobalSettings
+                {
+                    ColorMode = ColorMode.Color,
+                    Orientation = Orientation.Portrait,
+                    PaperSize = PaperKind.A4,
+                    Margins = new MarginSettings { Top = 10 },
+                    DocumentTitle = "PDF Report",
+                    Out = @"D:\PDFCreator\Employee_Report.pdf"
+                };
+                var objectSettings = new ObjectSettings
+                {
+                    PagesCount = true,
+                    HtmlContent = TemplatePdfGenerator.GetHTMLString(cv),
+                    WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "styles.css") },
+                    HeaderSettings = { FontName = "Arial", FontSize = 9, Right = "Page [page] of [toPage]", Line = true },
+                    FooterSettings = { FontName = "Arial", FontSize = 9, Line = true, Center = "Report Footer" }
+                };
+                var pdf = new HtmlToPdfDocument()
+                {
+                    GlobalSettings = globalSettings,
+                    Objects = { objectSettings }
+                };
+                _converter.Convert(pdf);
+                /*return Ok("Successfully created PDF document.");*/
+                //
                 CVEntity newCV = CVMapper.ToEntity(cv);
                 CVEntity u = await _CVsRepository.AddCV(newCV);
                 if (u != null)

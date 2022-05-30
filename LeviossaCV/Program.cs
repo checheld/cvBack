@@ -1,6 +1,8 @@
 using Data;
 using Data.Repositories;
 using Data.Repositories.Abstract;
+using DinkToPdf;
+using DinkToPdf.Contracts;
 using Domain;
 using Microsoft.EntityFrameworkCore;
 using Services;
@@ -50,7 +52,7 @@ builder.Services.AddTransient<IProfilePhotoService, ProfilePhotoService>();
 
 builder.Services.AddAutoMapper(/*typeof(AppMappingProfile),*/ typeof(AppMappingCompany), typeof(AppMappingTechnology), typeof(AppMappingUniversity), typeof(AppMappingProject));
 
-/*builder.Services.Configure<CloudinarySettingsDTO>(Configuration.GetSection("CloudinarySettings"));*/
+builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 
 var app = builder.Build();
 

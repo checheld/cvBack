@@ -23,6 +23,7 @@ namespace Data.Repositories
                     LastName = user.LastName,
                     Description = user.Description,
                     CreatedAt = user.CreatedAt,
+                    photoUrl = user.photoUrl,
                 };
                 var technologies = user.TechnologyList;
 
@@ -44,7 +45,7 @@ namespace Data.Repositories
                         StartDate = education.StartDate,
                         EndDate = education.EndDate,
                         University = findUniversity,
-                        UserId = addedUser.Id
+                        UserId = addedUser.Id,
                     };
                     educationList.Add(newEducation);
                 }
@@ -180,6 +181,7 @@ namespace Data.Repositories
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Description = user.Description,
+                    photoUrl = user.photoUrl,
                     Id = user.Id
                 };
                 db.Users.Update(newModel);

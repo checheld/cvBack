@@ -14,6 +14,7 @@ namespace Mappers
                 userEntity.LastName = user.LastName;
                 userEntity.Description = user.Description;
                 userEntity.Id = user.Id;
+                userEntity.photoUrl = user.photoUrl;
                 userEntity.CreatedAt = DateTime.Now;
 
                 if (user.TechnologyList != null)
@@ -46,6 +47,7 @@ namespace Mappers
                 user.Description = userEntity.Description;
                 user.CreatedAt = userEntity.CreatedAt;
                 user.Id = userEntity.Id;
+                user.photoUrl = userEntity.photoUrl;
 
                 if (userEntity.TechnologyList != null)
                     user.TechnologyList = TechnologyMapper.ToDomainList(userEntity.TechnologyList);

@@ -12,35 +12,21 @@ namespace Services
     {
 
         private readonly IUsersRepository _usersRepository;
-        /*private readonly IMapper _mapper;*/
 
         public UsersService(IMapper mapper, IServiceProvider _serviceProvider)
         {
-            /*_mapper = mapper;*/
             _usersRepository = _serviceProvider.GetService<IUsersRepository>();
         }
-
-        // autoMapper
-        /*public class AppMappingProfile : Profile
-        {
-            public AppMappingProfile()
-            {
-                CreateMap<UserDTO, UserEntity>().ReverseMap();
-            }
-        }*/
-        //
 
         public async Task<UserDTO> AddUser(UserDTO user)
         {
             try
             {
                 UserEntity newUser = UserMapper.ToEntity(user);
-                /*var newUser = _mapper.Map<UserEntity>(user);*/
                 UserEntity u = await _usersRepository.AddUser(newUser);
                 if (u != null)
                 {
                     UserDTO item = UserMapper.ToDomain(u);
-                    /*var item = _mapper.Map<UserDTO>(u);*/
                     return item;
                 };
             }
@@ -73,7 +59,6 @@ namespace Services
             try
             {
                 return UserMapper.ToDomain(await _usersRepository.GetUserById(id));
-                /*return _mapper.Map<UserDTO>(await _usersRepository.GetUserById(id));*/
             }
             catch (Exception ex)
             {
@@ -86,14 +71,6 @@ namespace Services
             try
             {
                 return UserMapper.ToDomainList(await _usersRepository.GetUsersBySearch(search));
-
-                /*var searchUsers = await _usersRepository.GetUsersBySearch(search);
-                List<UserDTO> users = new List<UserDTO>();
-                foreach (UserEntity user in searchUsers)
-                {
-                    _mapper.Map<UserEntity>(user);
-                }
-                return users;*/
             }
             catch (Exception ex)
             {
@@ -111,7 +88,6 @@ namespace Services
                 await this._usersRepository.RemoveAllWorkExperiences(getUser.Id);
 
                 return UserMapper.ToDomain(await _usersRepository.UpdateUser(UserMapper.ToEntity(user)));
-                /*return _mapper.Map<UserDTO>(await _usersRepository.UpdateUser(UserMapper.ToEntity(user)));*/
             }
             catch (Exception ex)
             {
@@ -127,7 +103,6 @@ namespace Services
                 List<UserEntity> userEntityList = await _usersRepository.GetAllUsers();
                 List<UserDTO> userDomainList = new List<UserDTO>();
                 userEntityList.ForEach(x => userDomainList.Add(UserMapper.ToDomain(x)));
-                /*userEntityList.ForEach(x => userDomainList.Add(_mapper.Map<UserDTO>(x)));*/
                
                 return userDomainList;
             }

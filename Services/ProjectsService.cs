@@ -23,8 +23,8 @@ namespace Services
         {
             public AppMappingProject()
             {
-                CreateMap<ProjectDTO, ProjectEntity>().ReverseMap();
-                CreateMap<TechnologyDTO, TechnologyEntity>().ReverseMap();
+                CreateMap<ProjectDTO, ProjectEntity>().ForMember(x=>x.TechnologyList, y=>y.MapFrom(t=>t.TechnologyList)).ReverseMap();
+                CreateMap<TechnologyDTO, TechnologyEntity>().ForMember(x => x.ProjectList, y => y.MapFrom(t => t.ProjectList)).ReverseMap();
             }
         }
         //
@@ -33,25 +33,12 @@ namespace Services
         {
             try
             {
-                /*var newProject = ProjectMapper.ToEntity(project);*/
                 var newProject = _mapper.Map<ProjectEntity>(project);
                 newProject.CreatedAt = DateTime.Now;
-                //
-                List<TechnologyEntity> technologies = new List<TechnologyEntity>();
-                if (newProject.TechnologyList != null)
-                    
-                foreach (TechnologyEntity tech in newProject.TechnologyList)
-                {
-                    technologies.Add(_mapper.Map<TechnologyEntity>(tech));
-                }
-                else
-                    technologies = new List<TechnologyEntity>();
-                newProject.TechnologyList = technologies;
-                //
+
                 var c = await _projectsRepository.AddProject(newProject);
                 c.TechnologyList.Select(c => { c.ProjectList = null; return c; }).ToList();
 
-                /*return ProjectMapper.ToDomain(c);*/
                 var item = _mapper.Map<ProjectDTO>(c);
                 return item;
             }
@@ -79,7 +66,6 @@ namespace Services
             {
                 var c = await _projectsRepository.GetProjectById(id);
                 c.TechnologyList.Select(c => { c.ProjectList = null; return c; }).ToList();
-                /*return ProjectMapper.ToDomain(await _projectsRepository.GetProjectById(id));*/
                 return _mapper.Map<ProjectDTO>(await _projectsRepository.GetProjectById(id));
             }
             catch (Exception ex)
@@ -98,7 +84,6 @@ namespace Services
                     Name = searchProjects.Name,
                     TechnologyName = searchProjects.TechnologyName
                 };
-                /*return ProjectMapper.ToDomainList(await _projectsRepository.GetProjectsBySearch(searchProjectToEntity));*/
 
                 var searchProjectsRepo = await _projectsRepository.GetProjectsBySearch(searchProjectToEntity);
                 List<ProjectDTO> projects = new List<ProjectDTO>();
@@ -118,7 +103,6 @@ namespace Services
         {
             try
             {
-                /*return ProjectMapper.ToDomain(await _projectsRepository.UpdateProject(ProjectMapper.ToEntity(project)));*/
                 return _mapper.Map<ProjectDTO>(await _projectsRepository.UpdateProject(_mapper.Map<ProjectEntity>(project)));
             }
             catch (Exception ex)
@@ -135,7 +119,6 @@ namespace Services
                 List<ProjectEntity> projectEntityList = await _projectsRepository.GetAllProjects();
                 projectEntityList.ForEach(x => x.TechnologyList.Select(c => { c.ProjectList = null; return c; }).ToList());
                 List<ProjectDTO> projectDomainList = new List<ProjectDTO>();
-                /*projectEntityList.ForEach(x => projectDomainList.Add(ProjectMapper.ToDomain(x)));*/
                 projectEntityList.ForEach(x => projectDomainList.Add(_mapper.Map<ProjectDTO>(x)));
                 return projectDomainList;
             }
