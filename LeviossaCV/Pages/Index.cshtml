@@ -1,0 +1,14 @@
+﻿
+<div style="margin-left: 20px;">
+    <h1>Name: <b>@Model.FirstName </b><b>@Model.LastName</b></h1>
+    <h2>Проекты:</h2>
+    @foreach (var ProjectCV in @Model.ProjectCVList)
+    {
+        <div>
+        <h3>@ProjectCV.Project.Name</h3>
+        <p>@ProjectCV.Position</p>
+        <p><b>@ProjectCV.StartDate</b> - <b>@ProjectCV.EndDate</b></p>
+        <p>@ProjectCV.Description</p>
+    </div>
+    }
+</div>

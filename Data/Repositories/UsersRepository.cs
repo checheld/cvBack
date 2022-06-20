@@ -184,49 +184,100 @@ namespace Data.Repositories
                     photoUrl = user.photoUrl,
                     Id = user.Id
                 };
-                db.Users.Update(newModel);
-                var technologies = user.TechnologyList;
-               
-                var addedUser = await db.Users.Where(x => x.Id == newModel.Id)
+                
+                db.Entry(newModel).State = EntityState.Modified;
+                await db.SaveChangesAsync();
+                db.Entry(newModel).State = EntityState.Detached;
+
+                var addedUser = await db.Users.Where(x => x.Id == user.Id).Include(x => x.EducationList).Include(x => x.WorkExperienceList).AsNoTracking()
                     .FirstOrDefaultAsync();
 
-                var educationList = new List<EducationEntity>();
+                var technologies = user.TechnologyList;
                 var educations = user.EducationList;
+                var workExperiences = user.WorkExperienceList;
+                var educationList = new List<EducationEntity>();
+                var workExperienceList = new List<WorkExperienceEntity>();
+
+                if (user.WorkExperienceList.Count() < addedUser.WorkExperienceList.Count())
+                {
+                    var deleteWorkExperiences = addedUser.WorkExperienceList.ExceptBy(workExperiences.Select(ed => ed.Id), x => x.Id).ToList();
+                    this.db.WorkExperiences.RemoveRange(deleteWorkExperiences);
+                }
+
+                if (user.EducationList.Count() < addedUser.EducationList.Count())
+                {
+                    var deleteEducations = addedUser.EducationList.ExceptBy(educations.Select(ed => ed.Id), x => x.Id).ToList();
+                    this.db.Educations.RemoveRange(deleteEducations);
+                }
+
                 foreach (var education in educations)
                 {
                     var findUniversity = await db.Universities.Where(x => x.Id == education.UniversityId)
                     .FirstOrDefaultAsync();
-                    var newEducation = new EducationEntity
+
+                    var findEducation = await db.Educations.Where(x => x.Id == education.Id).FirstOrDefaultAsync();
+
+                    if (findEducation != null)
                     {
-                        Speciality = education.Speciality,
-                        StartDate = education.StartDate,
-                        EndDate = education.EndDate,
-                        University = findUniversity,
-                        UserId = addedUser.Id,
-                        CreatedAt = education.CreatedAt
-                    };
-                    educationList.Add(newEducation);
+                        findEducation.Speciality = education.Speciality;
+                        findEducation.StartDate = education.StartDate;
+                        findEducation.EndDate = education.EndDate;
+                        findEducation.University = findUniversity;
+                        findEducation.UniversityId = findUniversity.Id;
+                        findEducation.UserId = addedUser.Id;
+                        findEducation.CreatedAt = education.CreatedAt;
+                    }
+                    else
+                    {
+                        var newEducation = new EducationEntity
+                        {
+                            Speciality = education.Speciality,
+                            StartDate = education.StartDate,
+                            EndDate = education.EndDate,
+                            University = findUniversity,
+                            UniversityId = findUniversity.Id,
+                            UserId = addedUser.Id,
+                            CreatedAt = education.CreatedAt
+                        };
+                        educationList.Add(newEducation);
+                    }
                 }
                 await db.Educations.AddRangeAsync(educationList);
                 await db.SaveChangesAsync();
 
-                var workExperienceList = new List<WorkExperienceEntity>();
-                var workExperiences = user.WorkExperienceList;
                 foreach (var workExperience in workExperiences)
                 {
                     var findCompany = await db.Companies.Where(x => x.Id == workExperience.CompanyId)
                     .FirstOrDefaultAsync();
-                    var newWorkExperience = new WorkExperienceEntity
+
+                    var findWorkExperience = await db.WorkExperiences.Where(x => x.Id == workExperience.Id).FirstOrDefaultAsync();
+
+                    if (findWorkExperience != null)
                     {
-                        Position = workExperience.Position,
-                        StartDate = workExperience.StartDate,
-                        EndDate = workExperience.EndDate,
-                        Description = workExperience.Description,
-                        Company = findCompany,
-                        UserId = addedUser.Id,
-                        CreatedAt = workExperience.CreatedAt
-                    };
-                    workExperienceList.Add(newWorkExperience);
+                        findWorkExperience.Position = workExperience.Position;
+                        findWorkExperience.Description = workExperience.Description;
+                        findWorkExperience.StartDate = workExperience.StartDate;
+                        findWorkExperience.EndDate = workExperience.EndDate;
+                        findWorkExperience.Company = findCompany;
+                        findWorkExperience.CompanyId = findCompany.Id;
+                        findWorkExperience.UserId = addedUser.Id;
+                        findWorkExperience.CreatedAt = workExperience.CreatedAt;
+                    }
+                    else
+                    {
+                        var newWorkExperience = new WorkExperienceEntity
+                        {
+                            Position = workExperience.Position,
+                            Description = workExperience.Description,
+                            StartDate = workExperience.StartDate,
+                            EndDate = workExperience.EndDate,
+                            Company = findCompany,
+                            CompanyId = findCompany.Id,
+                            UserId = addedUser.Id,
+                            CreatedAt = workExperience.CreatedAt
+                        };
+                        workExperienceList.Add(newWorkExperience);
+                    }
                 }
                 await db.WorkExperiences.AddRangeAsync(workExperienceList);
                 await db.SaveChangesAsync();
@@ -238,23 +289,21 @@ namespace Data.Repositories
 
                 var links = new List<UserTechnologyEntity>();
 
-                foreach (var technology in technologies)
+                foreach (var technology in user.TechnologyList)
                 {
                     links.Add(new UserTechnologyEntity
-                    {
-                        UserId = addedUser.Id,
-                        TechnologyId = technology.Id
-                    }
+                        {
+                            UserId = addedUser.Id,
+                            TechnologyId = technology.Id
+                        }
                     );
                 }
                 await db.UserTechnology.AddRangeAsync(links);
 
                 await db.SaveChangesAsync();
-                
-                await db.SaveChangesAsync();
                 user.TechnologyList.Select(c => { c.UserList = null; return c; }).ToList();
 
-                return await GetUserById(newModel.Id);
+                return await GetUserById(user.Id);
 
             }
             catch (Exception ex)

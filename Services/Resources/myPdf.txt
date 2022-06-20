@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Pdf Template</title>
+    <style>
+        @@import url(https://fonts.googleapis.com/css?family=Nunito);
+        body {
+            font-family: "Nunito", sans-serif;
+            width: 21cm;
+        }
+        .container {
+            margin-top: 60px;
+            margin-bottom: 60px;
+            margin-left: 40px;
+            margin-right: 40px;
+        }
+        h1 {
+            font-weight: 700;
+            -webkit-print-color-adjust: exact;
+            text-transform: uppercase;
+            color: #2A2D33;
+            margin-bottom: 0;
+        }
+        h2 {
+            margin-bottom: 8px;
+        }
+        .secondaryText {
+            -webkit-print-color-adjust: exact;
+            color: #AFB5BF;
+            font-size: 20px;
+            margin-top: 0;
+        }
+        hr {
+            border-left: 1px solid #AFB5BF;
+            margin-top: 10px;
+            width: 150px
+        }
+        ul {
+            margin-left: 0;
+            padding-left: 0;
+        }
+        li {
+            list-style-type: none;
+            margin-left: 0;
+            padding-left: 0;
+        }
+        .circle {
+            width: 20px;
+            height: 20px;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+            -webkit-print-color-adjust: exact;
+            background: linear-gradient(to bottom, #00cca2, #049ecc);
+        }
+        .footer {
+            position: relative;
+            -webkit-print-color-adjust: exact;
+            background-color:#F1F3F5; 
+            color:#AFB5BF; 
+            height: 150px; 
+            border-radius: 7px;
+            font-size: 25px;
+            text-align: center;
+            padding-top: 25px;
+            padding-left: 25px;
+            padding-right: 25px;
+            padding-bottom: 25px;
+            position: relative;
+        }
+        .footer::before {
+            content: '';
+            position: absolute;
+            bottom: 28%;
+            left: 40%;
+            display:inline-block;
+            width: 150px;
+            height: 1px;
+            -webkit-print-color-adjust: exact;
+            background-color: #AFB5BF;
+        }
+        .footer::after {
+            content: '';
+            position: absolute;
+            bottom: 23%;
+            left: 49%;
+            width: 20px;
+            height: 20px;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+            -webkit-print-color-adjust: exact;
+            background: linear-gradient(to bottom, #00cca2, #049ecc);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="margin-bottom: 0px; font-weight: 800; font-size: 35px;">
+            @Model.FirstName @Model.LastName
+        </h1>
+        <p style="
+            color: #AFB5BF";
+            margin-top: 0px;
+            >
+            WEB DEVELOPMENT
+        </p>
+        <div style="display: flex">
+            <img src=@Model.photoUrl
+                alt="avatar" 
+                style="width: 130px;
+                    height: 130px;
+                    border-radius: 65px;
+                    margin-top: 20px;
+                    margin-right: 20px">
+            <div>
+                <h2>PROFILE</h2>
+                <p class="secondaryText">
+                    @Model.Description
+                </p>
+            </div>
+        </div>
+        <div style="display: flex; margin-bottom: 30px">
+            <div style="min-width: 30%; margin-right: 40px;">
+                <h2>EDUCATION</h2>
+                @foreach(var education in @Model.EducationList)
+                {
+                    <h3 style="margin-bottom: 5px">@education.Speciality</h3>
+                    <p class="secondaryText" style="margin-bottom: 5px; width: 180px">@education.University.Name</p>
+                    <p class="secondaryText" style="font-size: 15px">@education.StartDate.Split("-")[0] - @education.EndDate.Split("-")[0]</p>
+                }
+            </div>
+            <div>
+                <div style="margin: 0; padding: 0; border-left: 1px solid #AFB5BF; padding-left:20px;">
+                    <h2>WORK EXPERIENCE</h2>
+                    @foreach(var workExp in @Model.WorkExperienceList)
+                    {
+                    <div style="display: flex; position: relative">
+                        <div style="min-width: 150px;">
+                            <h3 style="margin-bottom: 5px">@workExp.StartDate.Split("-")[0] - @workExp.EndDate.Split("-")[0]</h3>
+                            <p class="secondaryText">@workExp.Company.Name</p>
+                            <div class="circle" style="position: absolute;
+                                        left: -30px;
+                                        top: 20px;">
+                            </div>
+                        </div>
+                        <div>
+                            <h3>@workExp.Position</h3>
+                            <p class="secondaryText">
+                                @workExp.Description
+                            </p>
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div style="display: flex">
+            <div style="min-width: 30%; margin-right: 40px;">
+                <h2>SOFT SKILLS</h2>
+                <ul class="secondaryText" style="padding-left: 20px;">
+                     @foreach(var tech in @Model.TechnologyList)
+                    {
+                        @if(tech.Type == "soft skills")
+                        {
+                            <li>
+                                @tech.Name
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+            <div style="margin: 0; padding: 0; border-left: 1px solid #AFB5BF; padding-left:20px;">
+                <h2>SKILLS</h2>
+                <ul style="list-style-type:none; padding-left: 0">
+                    <li>
+                        <div style="display: flex; position: relative">
+                            <h3 style="margin: 0; min-width: 100px; margin-bottom: 20px">Front-end</h3>
+                            <ul class="secondaryText" style="padding-left: 20px;">
+                              @foreach(var tech in @Model.TechnologyList)
+                                {
+                                if(tech.Type == "front-end")
+                                    {
+                                        <li>
+                                            @tech.Name
+                                        </li>
+                                    }   
+                                }                 
+                            </ul>
+                            <div class="circle" 
+                                style="position: absolute;
+                                    left: -30px;
+                                    top: 2%;">
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div style="display: flex; position: relative">
+                            <h3 style="margin: 0; min-width: 100px; margin-bottom: 20px">Back-end</h3>
+                             <ul class="secondaryText" style="padding-left: 20px;">
+                             @foreach(var tech in @Model.TechnologyList)
+                             {
+                                 if(tech.Type == "back-end")
+                                {
+                                    <li>
+                                        @tech.Name
+                                    </li>
+                                }
+                            }
+                            </ul>
+                            <div class="circle" 
+                                style="position: absolute;
+                                    left: -30px;
+                                    top: 2%;">
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div style="display: flex; position: relative">
+                            <h3 style="margin: 0; min-width: 100px; margin-bottom: 20px">Databases</h3>
+                             <ul class="secondaryText" style="padding-left: 20px;">
+                             @foreach(var tech in @Model.TechnologyList)
+                             {
+                                 if(tech.Type == "databases")
+                                {
+                                    <li>
+                                        @tech.Name
+                                    </li>
+                                }
+                            }
+                            </ul>
+                            <div class="circle" 
+                                style="position: absolute;
+                                    left: -30px;
+                                    top: 2%;">
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div style="display: flex; position: relative">
+                            <h3 style="margin: 0; min-width: 100px; margin-bottom: 20px">Other</h3>
+                            <ul class="secondaryText" style="padding-left: 20px;">
+                            @foreach(var tech in @Model.TechnologyList)
+                            {
+                                 if(tech.Type == "other")
+                                {
+                                    <li>
+                                        @tech.Name
+                                    </li>
+                                }                             
+                            }
+                            </ul>
+                            <div class="circle" 
+                                style="position: absolute;
+                                    left: -30px;
+                                    top: 2%;">
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <h1>
+           @Model.FirstName @Model.LastName
+        </h1>
+        <p style="color: #AFB5BF; margin-top: 10px; margin-bottom: 40px;">PORTFOLIO</p>
+        @foreach(var projCV in @Model.ProjectCVList)
+            {
+                <div style="display:flex; margin-bottom: 80px">
+                    <div style="min-width: 30%; margin-right: 40px;">
+                        <h2 style="margin-top: 0">@projCV.Project.Name</h2>
+                        <p class="secondaryText" style="margin-bottom: 5px">@projCV.Project.Type</p>
+                        <p class="secondaryText" style="font-size: 15px">@projCV.Project.Country, @projCV.EndDate.Split("-")[0]</p>
+                    </div>
+                    <div style="margin: 0; padding: 0; border-left: 1px solid #AFB5BF; padding-left:20px; position: relative">
+                        <ul class="secondaryText" style="padding-left: 20px; margin-bottom: 10px">
+                         @foreach(var tech in @projCV.Project.TechnologyList)
+                            {
+                                <li>
+                                    @tech.Name
+                                </li>                          
+                            }
+                        </ul>
+                        <p class="secondaryText" style="margin-bottom: 10px">
+                            @projCV.Description;
+                        </p>
+                        <div class="circle" 
+                            style="position: absolute;
+                                left: -10px;
+                                top: 0;">
+                        </div>
+                    </div>
+                </div>
+            }
+        <div class="footer">
+            <p>
+                Thank you for your attention hope to hear you back and have a nice day
+            </p>
+        </div>
+    </div>
+</body>
+</html>

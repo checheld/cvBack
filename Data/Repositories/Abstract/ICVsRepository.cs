@@ -13,6 +13,6 @@ namespace Data.Repositories.Abstract
 
         Task RemoveAllProjectCVs(int userId);
 
-        Task Update(CVEntity cv);
+        /*Task Update(CVEntity cv);*/
     }
 }

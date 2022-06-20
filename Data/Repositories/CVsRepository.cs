@@ -90,7 +90,7 @@ namespace Data.Repositories
         public async Task<CVEntity> GetCVById(int id)
         {
             var cv = await db.CVs.Include(x => x.User)
-                .Include(x => x.ProjectCVList).ThenInclude(x => x.Project)
+                .Include(x => x.ProjectCVList).ThenInclude(x => x.Project).ThenInclude(x => x.TechnologyList)
                 .AsNoTracking()
                 .SingleOrDefaultAsync(x => x.Id == id);
 
@@ -100,8 +100,6 @@ namespace Data.Repositories
             }
             return null;
         }
-
-
 
         public async Task<List<CVEntity>> GetCVsBySearch(string search)
         {
@@ -140,54 +138,70 @@ namespace Data.Repositories
                     CVName = cv.CVName,
                     CreatedAt = cv.CreatedAt,
                     User = findUser,
+                    UserId = findUser.Id,
                     Id = cv.Id
                 };
-                db.CVs.Update(newModel);
-                //await db.SaveChangesAsync();
 
-                var addedCV = await db.CVs.Where(x => x.Id == newModel.Id)
+                db.Entry(newModel).State = EntityState.Modified;
+                await db.SaveChangesAsync();
+                db.Entry(newModel).State = EntityState.Detached;
+
+                var addedCV = await db.CVs.Where(x => x.Id == newModel.Id).Include(x => x.ProjectCVList).AsNoTracking()
                     .FirstOrDefaultAsync();
 
                 var projectCVList = new List<ProjectCVEntity>();
                 var projectCVs = cv.ProjectCVList;
+
+                if (cv.ProjectCVList.Count() < addedCV.ProjectCVList.Count())
+                {
+                    var deleteProjectCVs = addedCV.ProjectCVList.ExceptBy(projectCVs.Select(ed => ed.Id), x => x.Id).ToList();
+                    this.db.ProjectCVs.RemoveRange(deleteProjectCVs);
+                }
+
                 foreach (var projectCV in projectCVs)
                 {
                     var findProject = await db.Projects.Where(x => x.Id == projectCV.ProjectId)
                     .FirstOrDefaultAsync();
-                    var newProjectCV = new ProjectCVEntity
+
+                    var findProjectCV = await db.ProjectCVs.Where(x => x.Id == projectCV.Id).FirstOrDefaultAsync();
+
+                    if (findProjectCV != null)
                     {
-                        CreatedAt = projectCV.CreatedAt,
-                        Position = projectCV.Position,
-                        Description = projectCV.Description,
-                        StartDate = projectCV.StartDate,
-                        EndDate = projectCV.EndDate,
-                        Project = findProject,
-                        CVId = addedCV.Id
-                    };
-                    projectCVList.Add(newProjectCV);
+                            findProjectCV.CreatedAt = projectCV.CreatedAt;
+                            findProjectCV.Position = projectCV.Position;
+                            findProjectCV.Description = projectCV.Description;
+                            findProjectCV.StartDate = projectCV.StartDate;
+                            findProjectCV.EndDate = projectCV.EndDate;
+                            findProjectCV.Project = findProject;
+                            findProjectCV.ProjectId = findProject.Id;
+                            findProjectCV.CVId = addedCV.Id;
+                    }
+                    else
+                    {
+                        var newProjectCV = new ProjectCVEntity
+                        {
+                            CreatedAt = projectCV.CreatedAt,
+                            Position = projectCV.Position,
+                            Description = projectCV.Description,
+                            StartDate = projectCV.StartDate,
+                            EndDate = projectCV.EndDate,
+                            Project = findProject,
+                            ProjectId = findProject.Id,
+                            CVId = addedCV.Id
+                        };
+                        projectCVList.Add(newProjectCV);
+                    }
                 }
                 await db.ProjectCVs.AddRangeAsync(projectCVList);
                 await db.SaveChangesAsync();
 
-
-
                 return await GetCVById(newModel.Id);
-
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return null;
             }
-        }
-
-        public async Task Update(CVEntity cv)
-        {
-            cv.ProjectCVList = null;
-            db.CVs.Update(cv);
-            await db.SaveChangesAsync();
-
-
         }
     }
 }

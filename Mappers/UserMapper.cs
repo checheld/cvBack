@@ -16,7 +16,7 @@ namespace Mappers
                 userEntity.Id = user.Id;
                 userEntity.photoUrl = user.photoUrl;
                 userEntity.CreatedAt = DateTime.Now;
-
+                userEntity.photoUrl = user.photoUrl;
                 if (user.TechnologyList != null)
                     userEntity.TechnologyList = TechnologyMapper.ToEntityList(user.TechnologyList);
                 else

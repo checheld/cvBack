@@ -1,7 +1,6 @@
 ﻿using Data.Repositories.Abstract;
 using Domain;
 using Entities;
-using Mappers;
 using Microsoft.Extensions.DependencyInjection;
 using Services.Abstract;
 using AutoMapper;

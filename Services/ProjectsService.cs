@@ -1,7 +1,6 @@
 ﻿using Data.Repositories.Abstract;
 using Domain;
 using Entities;
-using Mappers;
 using Microsoft.Extensions.DependencyInjection;
 using Services.Abstract;
 using AutoMapper;
@@ -18,7 +17,6 @@ namespace Services
             _projectsRepository = _serviceProvider.GetService<IProjectsRepository>();
         }
 
-        // autoMapper
         public class AppMappingProject : Profile
         {
             public AppMappingProject()
@@ -27,7 +25,6 @@ namespace Services
                 CreateMap<TechnologyDTO, TechnologyEntity>().ForMember(x => x.ProjectList, y => y.MapFrom(t => t.ProjectList)).ReverseMap();
             }
         }
-        //
         
         public async Task<ProjectDTO> AddProject(ProjectDTO project)
         {

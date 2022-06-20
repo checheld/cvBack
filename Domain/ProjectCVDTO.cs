@@ -4,7 +4,7 @@ namespace Domain
 {
     public class ProjectCVDTO : BaseDomain
     {
-        public int? ProjectId { get; set; }
+        public int ProjectId { get; set; }
         public virtual ProjectDTO? Project { get; set; }
         public string Position { get; set; }
         public string Description { get; set; }

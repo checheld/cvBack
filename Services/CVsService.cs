@@ -4,68 +4,52 @@ using Entities;
 using Mappers;
 using Microsoft.Extensions.DependencyInjection;
 using Services.Abstract;
-using DinkToPdf;
-using Services.Utility;
-using DinkToPdf.Contracts;
+using AutoMapper;
 
 namespace Services
 {
     public class CVsService : ICVsService
     {
         private readonly ICVsRepository _CVsRepository;
-        private IConverter _converter;
-        public CVsService(IConverter converter)
+        private readonly IMapper _mapper;
+
+        public CVsService(IMapper mapper, IServiceProvider _serviceProvider)
         {
-            _converter = converter;
-        }
-        public CVsService(IServiceProvider _serviceProvider)
-        {
+            _mapper = mapper;
             _CVsRepository = _serviceProvider.GetService<ICVsRepository>();
+        }
+
+        public class AppMappingCV : Profile
+        {
+            public AppMappingCV()
+            {
+                CreateMap<CVDTO, CVEntity>().ForMember(x => x.ProjectCVList, y => y.MapFrom(t => t.ProjectCVList)).
+                    ForMember(x => x.User, y => y.MapFrom(t => t.User)).ReverseMap();
+                CreateMap<ProjectCVDTO, ProjectCVEntity>().ForMember(x => x.Project, y => y.MapFrom(t => t.Project)).ReverseMap();
+                CreateMap<UserDTO, UserEntity>().ReverseMap();
+                CreateMap<ProjectDTO, ProjectEntity>().ReverseMap();
+            }
         }
 
         public async Task<CVDTO> AddCV(CVDTO cv)
         {
             try
             {
-                //
-                var globalSettings = new GlobalSettings
-                {
-                    ColorMode = ColorMode.Color,
-                    Orientation = Orientation.Portrait,
-                    PaperSize = PaperKind.A4,
-                    Margins = new MarginSettings { Top = 10 },
-                    DocumentTitle = "PDF Report",
-                    Out = @"D:\PDFCreator\Employee_Report.pdf"
-                };
-                var objectSettings = new ObjectSettings
-                {
-                    PagesCount = true,
-                    HtmlContent = TemplatePdfGenerator.GetHTMLString(cv),
-                    WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "styles.css") },
-                    HeaderSettings = { FontName = "Arial", FontSize = 9, Right = "Page [page] of [toPage]", Line = true },
-                    FooterSettings = { FontName = "Arial", FontSize = 9, Line = true, Center = "Report Footer" }
-                };
-                var pdf = new HtmlToPdfDocument()
-                {
-                    GlobalSettings = globalSettings,
-                    Objects = { objectSettings }
-                };
-                _converter.Convert(pdf);
-                /*return Ok("Successfully created PDF document.");*/
-                //
-                CVEntity newCV = CVMapper.ToEntity(cv);
-                CVEntity u = await _CVsRepository.AddCV(newCV);
-                if (u != null)
-                {
-                    CVDTO item = CVMapper.ToDomain(u);
-                    return item;
-                };
+                /*CVEntity newCV = CVMapper.ToEntity(cv);*/
+                CVEntity newCV = _mapper.Map<CVEntity>(cv);
+                newCV.CreatedAt = DateTime.Now;
+
+                var c = await _CVsRepository.AddCV(newCV);
+                c.ProjectCVList.Select(c => { c.CV = null; c.Project = null; return c; }).ToList();
+
+                /*CVDTO item = CVMapper.ToDomain(u);*/
+                var item = _mapper.Map<CVDTO>(c);
+                return item;
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(ex);
+                throw ex;
             }
-            return null;
         }
 
         public async Task<string> DeleteCVById(int id)
@@ -74,10 +58,7 @@ namespace Services
             {
                 var getCV = await this._CVsRepository.GetCVById(id);
 
-                if (getCV != null)
-                {
-                    await this._CVsRepository.RemoveAllProjectCVs(getCV.Id);
-                }
+                await this._CVsRepository.RemoveAllProjectCVs(getCV.Id);
 
                 return await _CVsRepository.DeleteCVById(id);
             }
@@ -91,7 +72,11 @@ namespace Services
         {
             try
             {
-                return CVMapper.ToDomain(await _CVsRepository.GetCVById(id));
+                var cv = await this._CVsRepository.GetCVById(id);
+                cv.ProjectCVList.Select(c => { c.CV = null; c.Project = null; return c; }).ToList();
+
+                return _mapper.Map<CVDTO>(cv);
+                /*return CVMapper.ToDomain(await _CVsRepository.GetCVById(id));*/
             }
             catch (Exception ex)
             {
@@ -103,7 +88,15 @@ namespace Services
         {
             try
             {
-                return CVMapper.ToDomainList(await _CVsRepository.GetCVsBySearch(search));
+                var searchCV = await _CVsRepository.GetCVsBySearch(search);
+                List<CVDTO> CVs = new List<CVDTO>();
+                foreach (CVEntity cv in searchCV)
+                {
+                    cv.ProjectCVList.Select(c => { c.CV = null; c.Project = null; return c; }).ToList();
+                    CVs.Add(_mapper.Map<CVDTO>(cv));
+                }
+                return CVs;
+               /* return CVMapper.ToDomainList(await _CVsRepository.GetCVsBySearch(search));*/
             }
             catch (Exception ex)
             {
@@ -115,14 +108,12 @@ namespace Services
         {
             try
             {
-                var getCV = await this._CVsRepository.GetCVById(cv.Id);
+                var c = await _CVsRepository.UpdateCV(_mapper.Map<CVEntity>(cv));
+                c.ProjectCVList.Select(c => { c.CV = null; c.Project = null; return c; }).ToList();
+                return _mapper.Map<CVDTO>(c);
 
-                await _CVsRepository.Update(getCV);
-                await _CVsRepository.UpdateCV(CVMapper.ToEntity(cv));
-
-                await this._CVsRepository.RemoveAllProjectCVs(getCV.Id);
-
-                return CVMapper.ToDomain(await _CVsRepository.UpdateCV(CVMapper.ToEntity(cv)));
+                /*var getCV = await this._CVsRepository.GetCVById(cv.Id);
+                return CVMapper.ToDomain(await _CVsRepository.UpdateCV(CVMapper.ToEntity(cv)));*/
             }
             catch (Exception ex)
             {
@@ -136,8 +127,9 @@ namespace Services
             try
             {
                 List<CVEntity> CVEntityList = await _CVsRepository.GetAllCVs();
+                CVEntityList.ForEach(c => c.ProjectCVList.Select(c => { c.CV = null; c.Project.TechnologyList = null; c.Project.CVProjectCVList = null; return c; }).ToList());
                 List<CVDTO> CVDomainList = new List<CVDTO>();
-                CVEntityList.ForEach(x => CVDomainList.Add(CVMapper.ToDomain(x)));
+                CVEntityList.ForEach(x => CVDomainList.Add(_mapper.Map<CVDTO>(x)));
                 return CVDomainList;
             }
             catch (Exception ex)

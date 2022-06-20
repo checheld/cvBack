@@ -1,14 +1,13 @@
 using Data;
 using Data.Repositories;
 using Data.Repositories.Abstract;
-using DinkToPdf;
-using DinkToPdf.Contracts;
 using Domain;
 using Microsoft.EntityFrameworkCore;
 using Services;
 using Services.Abstract;
 using System.Configuration;
 using static Services.CompaniesService;
+using static Services.CVsService;
 using static Services.ProjectsService;
 using static Services.TechnologiesService;
 using static Services.UniversitiesService;
@@ -48,11 +47,11 @@ builder.Services.AddTransient<ICVsService, CVsService>();
 builder.Services.AddTransient<ICVsRepository, CVsRepository>();
 
 builder.Services.AddTransient<IProfilePhotoService, ProfilePhotoService>();
-/*builder.Services.AddTransient<IProfilePhotoRepository, ProfilePhotoRepository>();*/
+builder.Services.AddTransient<IPdfService, PdfService>();
 
-builder.Services.AddAutoMapper(/*typeof(AppMappingProfile),*/ typeof(AppMappingCompany), typeof(AppMappingTechnology), typeof(AppMappingUniversity), typeof(AppMappingProject));
+builder.Services.AddAutoMapper(typeof(AppMappingUser), typeof(AppMappingCompany), typeof(AppMappingTechnology), typeof(AppMappingUniversity), typeof(AppMappingProject), typeof(AppMappingCV));
 
-builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -68,5 +67,7 @@ app.UseCors(x => x
                 .AllowAnyMethod()
                 .AllowAnyHeader()
             );
+
+app.MapRazorPages();
 
 app.Run("http://localhost:3001");
