@@ -4,6 +4,7 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20220621134251_projectPhotoAdded")]
+    partial class projectPhotoAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,7 +35,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ProjectId")
+                    b.Property<int?>("ProjectEntityId")
                         .HasColumnType("int");
 
                     b.Property<string>("Url")
@@ -42,7 +44,7 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("ProjectEntityId");
 
                     b.ToTable("ProjectPhotoEntity");
                 });
@@ -355,13 +357,9 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Entities.ProjectPhotoEntity", b =>
                 {
-                    b.HasOne("Entities.ProjectEntity", "Project")
+                    b.HasOne("Entities.ProjectEntity", null)
                         .WithMany("PhotoList")
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Project");
+                        .HasForeignKey("ProjectEntityId");
                 });
 
             modelBuilder.Entity("Entities.CVEntity", b =>

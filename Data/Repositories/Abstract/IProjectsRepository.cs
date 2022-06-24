@@ -9,6 +9,7 @@ namespace Data.Repositories.Abstract
         Task<ProjectEntity> GetProjectById(int id);
         Task<List<ProjectEntity>> GetProjectsBySearch(SearchProjectsEntity searchProjectsEntity);
         Task<string> DeleteProjectById(int id);
+        Task RemoveAllProjectPhotos(int projectId);
         Task<List<ProjectEntity>> GetAllProjects();
     }
 }

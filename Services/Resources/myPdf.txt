@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CV Pdf Template</title>
     <style>
+
         @@import url(https://fonts.googleapis.com/css?family=Nunito);
         body {
             font-family: "Nunito", sans-serif;
@@ -41,6 +42,8 @@
         ul {
             margin-left: 0;
             padding-left: 0;
+            page-break-inside:avoid; 
+            page-break-after:auto;
         }
         li {
             list-style-type: none;
@@ -95,7 +98,12 @@
             -webkit-print-color-adjust: exact;
             background: linear-gradient(to bottom, #00cca2, #049ecc);
         }
+        .breakWatcher { 
+            page-break-inside:avoid; 
+            page-break-after:auto 
+        };
     </style>
+  
 </head>
 <body>
     <div class="container">
@@ -108,7 +116,7 @@
             >
             WEB DEVELOPMENT
         </p>
-        <div style="display: flex">
+        <div style="display: flex;margin-bottom: 40px;">
             <img src=@Model.photoUrl
                 alt="avatar" 
                 style="width: 130px;
@@ -138,7 +146,7 @@
                     <h2>WORK EXPERIENCE</h2>
                     @foreach(var workExp in @Model.WorkExperienceList)
                     {
-                    <div style="display: flex; position: relative">
+                    <div style="display: flex; position: relative" class="breakWatcher">
                         <div style="min-width: 150px;">
                             <h3 style="margin-bottom: 5px">@workExp.StartDate.Split("-")[0] - @workExp.EndDate.Split("-")[0]</h3>
                             <p class="secondaryText">@workExp.Company.Name</p>
@@ -158,20 +166,20 @@
                 </div>
             </div>
         </div>
-        <div style="display: flex">
+        <div style="display: flex" class="breakWatcher">
             <div style="min-width: 30%; margin-right: 40px;">
                 <h2>SOFT SKILLS</h2>
-                <ul class="secondaryText" style="padding-left: 20px;">
+                <div class="secondaryText" style="padding-bottom: 20px;">
                      @foreach(var tech in @Model.TechnologyList)
                     {
                         @if(tech.Type == "soft skills")
                         {
-                            <li>
-                                @tech.Name
-                            </li>
+                            <span>
+                                @tech.Name, 
+                            </span>
                         }
                     }
-                </ul>
+                </div>
             </div>
             <div style="margin: 0; padding: 0; border-left: 1px solid #AFB5BF; padding-left:20px;">
                 <h2>SKILLS</h2>
@@ -179,17 +187,17 @@
                     <li>
                         <div style="display: flex; position: relative">
                             <h3 style="margin: 0; min-width: 100px; margin-bottom: 20px">Front-end</h3>
-                            <ul class="secondaryText" style="padding-left: 20px;">
+                            <div class="secondaryText" style="padding-left: 20px;padding-bottom: 20px;">
                               @foreach(var tech in @Model.TechnologyList)
                                 {
                                 if(tech.Type == "front-end")
                                     {
-                                        <li>
-                                            @tech.Name
-                                        </li>
+                                        <span>
+                                            @tech.Name, 
+                                        </span>
                                     }   
                                 }                 
-                            </ul>
+                            </div>
                             <div class="circle" 
                                 style="position: absolute;
                                     left: -30px;
@@ -200,17 +208,17 @@
                     <li>
                         <div style="display: flex; position: relative">
                             <h3 style="margin: 0; min-width: 100px; margin-bottom: 20px">Back-end</h3>
-                             <ul class="secondaryText" style="padding-left: 20px;">
+                             <div class="secondaryText" style="padding-left: 20px;padding-bottom: 20px;">
                              @foreach(var tech in @Model.TechnologyList)
                              {
                                  if(tech.Type == "back-end")
                                 {
-                                    <li>
-                                        @tech.Name
-                                    </li>
+                                     <span>
+                                        @tech.Name, 
+                                     </span>
                                 }
                             }
-                            </ul>
+                            </div>
                             <div class="circle" 
                                 style="position: absolute;
                                     left: -30px;
@@ -221,17 +229,17 @@
                     <li>
                         <div style="display: flex; position: relative">
                             <h3 style="margin: 0; min-width: 100px; margin-bottom: 20px">Databases</h3>
-                             <ul class="secondaryText" style="padding-left: 20px;">
+                             <div class="secondaryText" style="padding-left: 20px;padding-bottom: 20px;">
                              @foreach(var tech in @Model.TechnologyList)
                              {
                                  if(tech.Type == "databases")
                                 {
-                                    <li>
-                                        @tech.Name
-                                    </li>
+                                    <span>
+                                        @tech.Name, 
+                                    </span>
                                 }
                             }
-                            </ul>
+                           </div>
                             <div class="circle" 
                                 style="position: absolute;
                                     left: -30px;
@@ -242,17 +250,17 @@
                     <li>
                         <div style="display: flex; position: relative">
                             <h3 style="margin: 0; min-width: 100px; margin-bottom: 20px">Other</h3>
-                            <ul class="secondaryText" style="padding-left: 20px;">
+                            <div class="secondaryText" style="padding-left: 20px;padding-bottom: 20px;">
                             @foreach(var tech in @Model.TechnologyList)
                             {
                                  if(tech.Type == "other")
                                 {
-                                    <li>
-                                        @tech.Name
-                                    </li>
+                                    <span>
+                                        @tech.Name, 
+                                    </span>
                                 }                             
                             }
-                            </ul>
+                            </div>
                             <div class="circle" 
                                 style="position: absolute;
                                     left: -30px;
@@ -270,21 +278,21 @@
         @foreach(var projCV in @Model.ProjectCVList)
             {
                 <div style="display:flex; margin-bottom: 80px">
-                    <div style="min-width: 30%; margin-right: 40px;">
+                    <div style="min-width: 30%; margin-right: 40px;" class="breakWatcher">
                         <h2 style="margin-top: 0">@projCV.Project.Name</h2>
                         <p class="secondaryText" style="margin-bottom: 5px">@projCV.Project.Type</p>
                         <p class="secondaryText" style="font-size: 15px">@projCV.Project.Country, @projCV.EndDate.Split("-")[0]</p>
                     </div>
                     <div style="margin: 0; padding: 0; border-left: 1px solid #AFB5BF; padding-left:20px; position: relative">
-                        <ul class="secondaryText" style="padding-left: 20px; margin-bottom: 10px">
+                        <div class="secondaryText" style="padding-left: 20px;padding-bottom: 20px;">
                          @foreach(var tech in @projCV.Project.TechnologyList)
                             {
-                                <li>
-                                    @tech.Name
-                                </li>                          
+                                 <span>
+                                    @tech.Name, 
+                                </span>                       
                             }
-                        </ul>
-                        <p class="secondaryText" style="margin-bottom: 10px">
+                        </div>
+                        <p class="secondaryText" style="padding-left: 20px;margin-bottom: 10px">
                             @projCV.Description;
                         </p>
                         <div class="circle" 
@@ -295,7 +303,7 @@
                     </div>
                 </div>
             }
-        <div class="footer">
+        <div class="footer breakWatcher">
             <p>
                 Thank you for your attention hope to hear you back and have a nice day
             </p>

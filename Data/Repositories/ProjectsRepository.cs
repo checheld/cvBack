@@ -24,6 +24,7 @@ namespace Data.Repositories
                     Link = project.Link,
                     Name = project.Name,
                     Type = project.Type,
+                    PhotoList = project.PhotoList
                 };
                 var technologies = project.TechnologyList;
                 var links = new List<ProjectTechnology>();  
@@ -67,9 +68,20 @@ namespace Data.Repositories
             return null;
         }
 
+        public async Task RemoveAllProjectPhotos(int projectId)
+        {
+            var get = await db.ProjectPhotoEntity.Where(x => x.ProjectId == projectId).ToListAsync();
+            db.ProjectPhotoEntity.RemoveRange(get);
+            await db.SaveChangesAsync();
+        }
+
+
         public async Task<List<ProjectEntity>> GetAllProjects()
         {
-            var projects = await db.Projects.Include(x => x.TechnologyList).ToListAsync();
+            var projects = await db.Projects
+                .Include(x => x.TechnologyList)
+                .Include(x => x.PhotoList)
+                .ToListAsync();
 
             if (projects != null)
             {
@@ -80,7 +92,10 @@ namespace Data.Repositories
 
         public async Task<ProjectEntity> GetProjectById(int id)
         {
-            var project = await db.Projects.Include(x => x.TechnologyList).ThenInclude(z => z.ProjectList).SingleOrDefaultAsync(x => x.Id == id);
+            var project = await db.Projects
+                .Include(x => x.TechnologyList).ThenInclude(z => z.ProjectList)
+                .Include(x => x.PhotoList)
+                .SingleOrDefaultAsync(x => x.Id == id);
 
             if (project != null)
             {

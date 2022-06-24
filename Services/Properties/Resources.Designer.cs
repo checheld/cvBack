@@ -69,6 +69,7 @@ namespace Services.Properties {
         ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
         ///    &lt;title&gt;CV Pdf Template&lt;/title&gt;
         ///    &lt;style&gt;
+        ///
         ///        @@import url(https://fonts.googleapis.com/css?family=Nunito);
         ///        body {
         ///            font-family: &quot;Nunito&quot;, sans-serif;
@@ -76,7 +77,7 @@ namespace Services.Properties {
         ///        }
         ///        .container {
         ///            margin-top: 60px;
-        ///            margin-bottom: 60px; [rest of string was truncated]&quot;;.
+        ///            margin-bottom: 60p [rest of string was truncated]&quot;;.
         /// </summary>
         public static string myPdf {
             get {

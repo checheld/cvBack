@@ -1,13 +1,12 @@
 using Data;
 using Data.Repositories;
 using Data.Repositories.Abstract;
-using Domain;
 using Microsoft.EntityFrameworkCore;
 using Services;
 using Services.Abstract;
-using System.Configuration;
 using static Services.CompaniesService;
 using static Services.CVsService;
+using static Services.ProjectPhotoService;
 using static Services.ProjectsService;
 using static Services.TechnologiesService;
 using static Services.UniversitiesService;
@@ -47,11 +46,13 @@ builder.Services.AddTransient<ICVsService, CVsService>();
 builder.Services.AddTransient<ICVsRepository, CVsRepository>();
 
 builder.Services.AddTransient<IProfilePhotoService, ProfilePhotoService>();
+builder.Services.AddTransient<IProjectPhotoService, ProjectPhotoService>();
+builder.Services.AddTransient<IProjectPhotoRepository, ProjectPhotoRepository>();
 builder.Services.AddTransient<IPdfService, PdfService>();
 
-builder.Services.AddAutoMapper(typeof(AppMappingUser), typeof(AppMappingCompany), typeof(AppMappingTechnology), typeof(AppMappingUniversity), typeof(AppMappingProject), typeof(AppMappingCV));
+builder.Services.AddAutoMapper(typeof(AppMappingUser), typeof(AppMappingCompany), typeof(AppMappingTechnology), typeof(AppMappingUniversity), typeof(AppMappingProject), typeof(AppMappingCV), typeof(AppMappingProjectPhoto)); 
 
-builder.Services.AddRazorPages();
+ builder.Services.AddRazorPages();
 
 var app = builder.Build();
 

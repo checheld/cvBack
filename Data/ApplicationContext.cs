@@ -16,9 +16,9 @@ namespace Data
         public DbSet<WorkExperienceEntity>? WorkExperiences { get; set; }
         public DbSet<CVEntity>? CVs { get; set; }
         public DbSet<ProjectCVEntity>? ProjectCVs { get; set; }
+        public DbSet<ProjectPhotoEntity>? ProjectPhotoEntity { get; set; }
         public DbSet<ProjectTechnology>? ProjectTechnology { get; set; }
         public DbSet<UserTechnologyEntity>? UserTechnology { get; set; }
-        public DbSet<ProfilePhotoEntity>? ProfilePhoto { get; set; }
         public ApplicationContext(DbContextOptions<ApplicationContext> opt) : base(opt)
         {
         }
@@ -34,7 +34,8 @@ namespace Data
             modelBuilder.ApplyConfiguration(new UserEducationMap());
             modelBuilder.ApplyConfiguration(new UserWorkExperienceMap());
             modelBuilder.ApplyConfiguration(new ProjectProjectCVMap());
-            modelBuilder.ApplyConfiguration(new CVProjectCVMap());  
+            modelBuilder.ApplyConfiguration(new CVProjectCVMap());
+            modelBuilder.ApplyConfiguration(new ProjectProjectPhotoMap());
         }
         
     }

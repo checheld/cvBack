@@ -105,8 +105,11 @@ namespace Services
             /*var browser = await playwright.Webkit.LaunchAsync();*/
             await using var context = await browser.NewContextAsync();
             var page = await context.NewPageAsync();
+
             await page.GotoAsync(dataUrl, new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle });
 
+            /*var test = page.Locator("id = main-content");*/
+            
             var output = await page.PdfAsync(new PagePdfOptions
             {
                 Format = "A4",

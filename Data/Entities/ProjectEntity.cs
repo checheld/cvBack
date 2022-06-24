@@ -1,4 +1,5 @@
-﻿using Entities.Abstract;
+﻿using Data.Entities;
+using Entities.Abstract;
 
 namespace Entities
 {
@@ -9,6 +10,7 @@ namespace Entities
         public string Type { get; set; }
         public string Country { get; set; }
         public string Link { get; set; }
+        public virtual List<ProjectPhotoEntity>? PhotoList { get; set; }
         public virtual List<TechnologyEntity>? TechnologyList { get; set; }
         public virtual List<ProjectTechnology>? ProjectTechnology { get; set; }
         public virtual List<ProjectCVEntity>? CVProjectCVList { get; set; }
