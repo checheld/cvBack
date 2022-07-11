@@ -5,7 +5,7 @@ namespace Entities
 {
     public class EducationEntity : BaseEntity
     {
-        public int? UniversityId { get; set; }
+        public int UniversityId { get; set; }
         public virtual UniversityEntity? University { get; set; }
         public string Speciality { get; set; }
         public string StartDate { get; set; }

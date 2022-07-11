@@ -1,19 +1,23 @@
+#region Imports
 using Data;
-using Data.Repositories;
-using Data.Repositories.Abstract;
+using Data.Repositories.Utility;
+using Data.Repositories.Utility.Interface;
 using Microsoft.EntityFrameworkCore;
 using Services;
 using Services.Abstract;
+using Services.Utility;
+using Services.Utility.Interface;
 using static Services.CompaniesService;
 using static Services.CVsService;
+using static Services.ProfilePhotoService;
 using static Services.ProjectPhotoService;
 using static Services.ProjectsService;
 using static Services.TechnologiesService;
 using static Services.UniversitiesService;
 using static Services.UsersService;
+#endregion
 
 var builder = WebApplication.CreateBuilder(args);
-// Add services to the container.
 
 builder.Services.AddControllersWithViews();
 
@@ -24,35 +28,17 @@ builder.Services.AddDbContext<ApplicationContext>(opts =>
      b => b.MigrationsAssembly("Data")
      ));
 
-// добавить все сервисы в сервис коллекцию
 builder.Services.AddTransient<ApplicationContext, ApplicationContext>();
 
-builder.Services.AddTransient<ICompaniesService, CompaniesService>();
-builder.Services.AddTransient<ICompaniesRepository, CompaniesRepository>();
-
-builder.Services.AddTransient<IUniversitiesService, UniversitiesService>();
-builder.Services.AddTransient<IUniversitiesRepository, UniversitiesRepository>();
-
-builder.Services.AddTransient<ITechnologiesService, TechnologiesService>();
-builder.Services.AddTransient<ITechnologiesRepository, TechnologiesRepository>();
-
-builder.Services.AddTransient<IProjectsService, ProjectsService>();
-builder.Services.AddTransient<IProjectsRepository, ProjectsRepository>();
-
-builder.Services.AddTransient<IUsersService, UsersService>();
-builder.Services.AddTransient<IUsersRepository, UsersRepository>();
-
-builder.Services.AddTransient<ICVsService, CVsService>();
-builder.Services.AddTransient<ICVsRepository, CVsRepository>();
-
-builder.Services.AddTransient<IProfilePhotoService, ProfilePhotoService>();
-builder.Services.AddTransient<IProjectPhotoService, ProjectPhotoService>();
-builder.Services.AddTransient<IProjectPhotoRepository, ProjectPhotoRepository>();
 builder.Services.AddTransient<IPdfService, PdfService>();
+builder.Services.AddTransient<IServiceManager, ServiceManager>();
+builder.Services.AddTransient<IRepositoryManager, RepositoryManager>();
 
-builder.Services.AddAutoMapper(typeof(AppMappingUser), typeof(AppMappingCompany), typeof(AppMappingTechnology), typeof(AppMappingUniversity), typeof(AppMappingProject), typeof(AppMappingCV), typeof(AppMappingProjectPhoto)); 
+builder.Services.AddAutoMapper(typeof(AppMappingUser), typeof(AppMappingCompany), 
+    typeof(AppMappingTechnology), typeof(AppMappingUniversity), typeof(AppMappingProject), 
+    typeof(AppMappingCV), typeof(AppMappingProjectPhoto), typeof(AppMappingPhotoParams));
 
- builder.Services.AddRazorPages();
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 

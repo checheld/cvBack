@@ -4,7 +4,7 @@ namespace Domain
 {
     public class EducationDTO : BaseDomain
     {
-        public int? UniversityId { get; set; }
+        public int UniversityId { get; set; }
         public virtual UniversityDTO? University { get; set; }
         public string Speciality { get; set; }
         public string StartDate { get; set; }

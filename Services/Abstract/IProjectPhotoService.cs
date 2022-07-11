@@ -6,7 +6,7 @@ namespace Services.Abstract
     public interface IProjectPhotoService
     {
         Task<string> AddProjectPhoto(IFormFile image);
-        Task<string> DeleteProjectPhotoById(int id);
+        Task DeleteProjectPhotoById(int id);
         
     }
 }

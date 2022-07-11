@@ -16,17 +16,6 @@ namespace Services.Utility
 <table>
 <p>!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</p>
 ");
-                /*sb.AppendFormat($@" <h1>{{CV.User.FirstName}} {{CV.User.LastName}}</h1>
-                                    <h2>Проекты</h2>");*/
-            /*foreach (var project in CV.ProjectCVList)
-            {
-                sb.AppendFormat($@"< div>
-                                    <h3>{{project.Project.Name}}</h3>
-                                    <p>{{project.Position}}</p>
-                                    <p>{{project.StartDate}} - {{project.EndDate}}</p>
-                                    <p>{{project.Dedscription}}</p>"
-                                );
-            }*/
                 sb.Append(@"
                                 </table>
                             </body>

@@ -1,7 +1,9 @@
-﻿using Data.Repositories.Abstract;
+﻿#region Imports
+using Data.Repositories.Abstract;
 using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+#endregion
 
 namespace Data.Repositories
 {
@@ -12,42 +14,57 @@ namespace Data.Repositories
         {
             db = _serviceProvider.GetService<ApplicationContext>();
         }
-        public async Task<CompanyEntity> AddCompany(CompanyEntity company)
+
+        public async Task<List<CompanyEntity>> AddCompanies(List<CompanyEntity> company)
         {
-            var foundCompany = await db.Companies.SingleOrDefaultAsync(x => x.Id == company.Id);
-            if (foundCompany == null)
+            try
             {
-                await db.Companies.AddAsync(company);
+                await db.Companies.AddRangeAsync(company);
                 await db.SaveChangesAsync();
+
                 return company;
             }
-            return null;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
-        public async Task<string> DeleteCompanyById(int id)
+        public async Task DeleteCompanyById(int id)
         {
-            var foundCompany = await db.Companies.SingleOrDefaultAsync(x => x.Id == id);
-            if (foundCompany != null)
+            try
             {
-                db.Companies.Remove(foundCompany);
+                db.Companies.Remove(await db.Companies.SingleOrDefaultAsync(x => x.Id == id));
                 await db.SaveChangesAsync();
             }
-            return null;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<List<CompanyEntity>> GetAllCompanies()
         {
-            var companies = await db.Companies.ToListAsync();
-            if (companies != null)
+            try
             {
-                return companies;
+                return await db.Companies.ToListAsync();
             }
-            return null;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<CompanyEntity> GetCompanyById(int id)
         {
-            return await db.Companies.SingleOrDefaultAsync(x => x.Id == id);
+            try
+            {
+                return await db.Companies.SingleOrDefaultAsync(x => x.Id == id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<List<CompanyEntity>> GetCompaniesBySearch(string search)
@@ -60,22 +77,22 @@ namespace Data.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
                 throw ex;
             }
         }
+
         public async Task<CompanyEntity> UpdateCompany(CompanyEntity company)
         {
             try
             {
                 db.Companies.Update(company);
                 await db.SaveChangesAsync();
+
                 return company;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return null;
+                throw ex;
             }
 
         }

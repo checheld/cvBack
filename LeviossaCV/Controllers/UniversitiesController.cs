@@ -1,49 +1,41 @@
 ﻿using Domain;
 using Microsoft.AspNetCore.Mvc;
-using Services.Abstract;
+using Services.Utility.Interface;
 
 namespace API.Controllers
 {
     [ApiController]
     public class UniversitiesController : ControllerBase
     {
-        private readonly IUniversitiesService _universitiesService;
-        public UniversitiesController(IServiceProvider _serviceProvider)
+        private readonly IServiceManager _serviceManager;
+        public UniversitiesController(IServiceManager serviceManager)
         {
-            _universitiesService = _serviceProvider.GetService<IUniversitiesService>();
+            _serviceManager = serviceManager;
         }
 
         [HttpPost]
         [Route("universities/add")]
         public async Task<IActionResult> AddUniversity([FromBody] List<UniversityDTO> university)
         {
-            if (university != null)
+            try
             {
-                var universities = new List<UniversityDTO>();
-                foreach (UniversityDTO i in university)
-                {
-                    try
-                    {
-                        universities.Add(await _universitiesService.AddUniversity(i));
-                    }
-                    catch (Exception ex)
-                    {
-                        return BadRequest(ex.Message);
-                    }
-                }
-                return Ok(universities);
+                return Ok(await _serviceManager.UniversitiesService.AddUniversities(university));
             }
-            return null;
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut]
         [Route("universities/{id}")]
         public async Task<IActionResult> UpdateUniversity([FromBody] UniversityDTO university, int id)
         {
-            university.Id = id;
             try
             {
-                return Ok(await _universitiesService.UpdateUniversity(university));
+                university.Id = id;
+
+                return Ok(await _serviceManager.UniversitiesService.UpdateUniversity(university));
             }
             catch (Exception ex)
             {
@@ -57,7 +49,7 @@ namespace API.Controllers
         {
             try
             {
-                return Ok(await _universitiesService.GetAllUniversities());
+                return Ok(await _serviceManager.UniversitiesService.GetAllUniversities());
             }
             catch (Exception ex)
             {
@@ -71,7 +63,7 @@ namespace API.Controllers
         {
             try
             {
-                return Ok(await _universitiesService.GetUniversityById(id));
+                return Ok(await _serviceManager.UniversitiesService.GetUniversityById(id));
             }
             catch (Exception ex)
             {
@@ -85,7 +77,7 @@ namespace API.Controllers
         {
             try
             {
-                return Ok(await _universitiesService.GetUniversitiesBySearch(search));
+                return Ok(await _serviceManager.UniversitiesService.GetUniversitiesBySearch(search));
             }
             catch (Exception ex)
             {
@@ -99,7 +91,9 @@ namespace API.Controllers
         {
             try
             {
-                return Ok(await _universitiesService.DeleteUniversityById(id));
+                await _serviceManager.UniversitiesService.DeleteUniversityById(id);
+
+                return Ok();
             }
             catch (Exception ex)
             {

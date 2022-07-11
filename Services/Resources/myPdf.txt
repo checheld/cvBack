@@ -166,7 +166,7 @@
                 </div>
             </div>
         </div>
-        <div style="display: flex" class="breakWatcher">
+        <div style="display: flex; margin-top: 20px" class="breakWatcher">
             <div style="min-width: 30%; margin-right: 40px;">
                 <h2>SOFT SKILLS</h2>
                 <div class="secondaryText" style="padding-bottom: 20px;">

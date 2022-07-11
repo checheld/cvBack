@@ -1,7 +1,9 @@
-﻿using Data.Repositories.Abstract;
+﻿#region Imports
+using Data.Repositories.Abstract;
 using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+#endregion
 
 namespace Data.Repositories
 {
@@ -12,47 +14,57 @@ namespace Data.Repositories
         {
             db = _serviceProvider.GetService<ApplicationContext>();
         }
+
         public async Task<TechnologyEntity> AddTechnology(TechnologyEntity technology)
         {
-            var foundTechnology = await db.Technologies.SingleOrDefaultAsync(x => x.Id == technology.Id);
-            if (foundTechnology == null)
+            try
             {
                 await db.Technologies.AddAsync(technology);
                 await db.SaveChangesAsync();
+
                 return technology;
             }
-            return null;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
-        public async Task<string> DeleteTechnologyById(int id)
+        public async Task DeleteTechnologyById(int id)
         {
-            var foundTechnology = await db.Technologies.SingleOrDefaultAsync(x => x.Id == id);
-            if (foundTechnology != null)
+            try
             {
-                db.Technologies.Remove(foundTechnology);
+                db.Technologies.Remove(await db.Technologies.SingleOrDefaultAsync(x => x.Id == id));
                 await db.SaveChangesAsync();
             }
-            return null;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<List<TechnologyEntity>> GetAllTechnologies()
         {
-            var technologies = await db.Technologies.ToListAsync();
-            if (technologies != null)
+            try
             {
-                return technologies;
+                return await db.Technologies.ToListAsync();
             }
-            return null;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<TechnologyEntity> GetTechnologyById(int id)
         {
-            var technology = await db.Technologies.SingleOrDefaultAsync(x => x.Id == id);
-            if (technology != null)
+            try
             {
-                return technology;
+                return await db.Technologies.SingleOrDefaultAsync(x => x.Id == id);
             }
-            return null;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<List<TechnologyEntity>> GetTechnologiesBySearch(string search)
@@ -65,21 +77,21 @@ namespace Data.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
                 throw ex;
             }
         }
+
         public async Task<TechnologyEntity> UpdateTechnology(TechnologyEntity technology)
         {
             try
             {
                 db.Technologies.Update(technology);
                 await db.SaveChangesAsync();
+
                 return technology;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
                 return null;
             }
         }

@@ -20,16 +20,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Data\Data.csproj" />
-    <ProjectReference Include="..\Domain\Domain.csproj" />
-    <ProjectReference Include="..\Mappers\Mappers.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Resources\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="C:\Users\dzhig\Desktop\myPdf.txt" Link="myPdf.txt" />
   </ItemGroup>
 
   <ItemGroup>

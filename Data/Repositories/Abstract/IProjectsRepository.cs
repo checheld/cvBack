@@ -8,8 +8,9 @@ namespace Data.Repositories.Abstract
         Task<ProjectEntity> UpdateProject(ProjectEntity project);
         Task<ProjectEntity> GetProjectById(int id);
         Task<List<ProjectEntity>> GetProjectsBySearch(SearchProjectsEntity searchProjectsEntity);
-        Task<string> DeleteProjectById(int id);
+        Task DeleteProjectById(int id);
         Task RemoveAllProjectPhotos(int projectId);
         Task<List<ProjectEntity>> GetAllProjects();
+        Task AddProjectTechnology(List<ProjectTechnologyEntity> projectTechnology);
     }
 }

@@ -1,16 +1,16 @@
 ﻿using Domain;
 using Microsoft.AspNetCore.Mvc;
-using Services.Abstract;
+using Services.Utility.Interface;
 
 namespace LeviossaCV.Controllers
 {
     [ApiController]
     public class CVsController : ControllerBase
     {
-        private readonly ICVsService _CVsService;
-        public CVsController(IServiceProvider _serviceProvider)
+        private readonly IServiceManager _serviceManager;
+        public CVsController(IServiceManager serviceManager)
         {
-            _CVsService = _serviceProvider.GetService<ICVsService>();
+            _serviceManager = serviceManager;
         }
 
         [HttpPost]
@@ -19,7 +19,7 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _CVsService.AddCV(cv));
+                return Ok(await _serviceManager.CVsService.AddCV(cv));
             }
             catch (Exception ex)
             {
@@ -29,12 +29,12 @@ namespace LeviossaCV.Controllers
 
         [HttpPut]
         [Route("CVs/{id}")]
-        public async Task<IActionResult> UpdateCV([FromBody] CVDTO /*CVModelUpate*/ cv, int id)
+        public async Task<IActionResult> UpdateCV([FromBody] CVDTO cv, int id)
         {
-            cv.Id = id;
             try
             {
-                return Ok(await _CVsService.UpdateCV(cv));
+                cv.Id = id;
+                return Ok(await _serviceManager.CVsService.UpdateCV(cv));
             }
             catch (Exception ex)
             {
@@ -48,7 +48,7 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _CVsService.GetAllCVs());
+                return Ok(await _serviceManager.CVsService.GetAllCVs());
             }
             catch (Exception ex)
             {
@@ -62,7 +62,7 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _CVsService.GetCVById(id));
+                return Ok(await _serviceManager.CVsService.GetCVById(id));
             }
             catch (Exception ex)
             {
@@ -76,7 +76,7 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _CVsService.GetCVsBySearch(search));
+                return Ok(await _serviceManager.CVsService.GetCVsBySearch(search));
             }
             catch (Exception ex)
             {
@@ -90,7 +90,9 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _CVsService.DeleteCVById(id));
+                await _serviceManager.CVsService.DeleteCVById(id);
+
+                return Ok();
             }
             catch (Exception ex)
             {

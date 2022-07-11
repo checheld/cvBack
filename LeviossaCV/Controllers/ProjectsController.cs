@@ -1,16 +1,16 @@
 ﻿using Domain;
 using Microsoft.AspNetCore.Mvc;
-using Services.Abstract;
+using Services.Utility.Interface;
 
 namespace LeviossaCV.Controllers
 {
     [ApiController]
     public class ProjectsController : ControllerBase
     {
-        private readonly IProjectsService _projectsService;
-        public ProjectsController(IServiceProvider _serviceProvider)
+        private readonly IServiceManager _serviceManager;
+        public ProjectsController(IServiceManager serviceManager)
         {
-            _projectsService = _serviceProvider.GetService<IProjectsService>();
+            _serviceManager = serviceManager;
         }
 
         [HttpPost]
@@ -20,7 +20,7 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _projectsService.AddProject(project));
+                return Ok(await _serviceManager.ProjectsService.AddProject(project));
             }
             catch (Exception ex)
             {
@@ -32,10 +32,11 @@ namespace LeviossaCV.Controllers
         [Route("projects/{id}")]
         public async Task<IActionResult> UpdateProject([FromBody] ProjectDTO project, int id)
         {
-            project.Id = id;
             try
             {
-                return Ok(await _projectsService.UpdateProject(project));
+                project.Id = id;
+
+                return Ok(await _serviceManager.ProjectsService.UpdateProject(project));
             }
             catch (Exception ex)
             {
@@ -49,7 +50,7 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _projectsService.GetAllProjects());
+                return Ok(await _serviceManager.ProjectsService.GetAllProjects());
             }
             catch (Exception ex)
             {
@@ -63,7 +64,7 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _projectsService.GetProjectById(id));
+                return Ok(await _serviceManager.ProjectsService.GetProjectById(id));
             }
             catch (Exception ex)
             {
@@ -77,7 +78,7 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _projectsService.GetProjectsBySearch(searchProjects));
+                return Ok(await _serviceManager.ProjectsService.GetProjectsBySearch(searchProjects));
             }
             catch (Exception ex)
             {
@@ -90,7 +91,9 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _projectsService.DeleteProjectById(id));
+                await _serviceManager.ProjectsService.DeleteProjectById(id);
+
+                return Ok();
             }
             catch (Exception ex)
             {

@@ -8,7 +8,7 @@ namespace Data.Repositories.Abstract
         Task<TechnologyEntity> UpdateTechnology(TechnologyEntity technology);
         Task<TechnologyEntity> GetTechnologyById(int id);
         Task<List<TechnologyEntity>> GetTechnologiesBySearch(string search);
-        Task<string> DeleteTechnologyById(int id);
+        Task DeleteTechnologyById(int id);
         Task<List<TechnologyEntity>> GetAllTechnologies();
     }
 }

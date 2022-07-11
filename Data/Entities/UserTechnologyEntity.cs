@@ -1,5 +1,4 @@
-﻿
-namespace Entities
+﻿namespace Entities
 {
     public class UserTechnologyEntity
     {

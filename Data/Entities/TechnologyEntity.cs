@@ -8,7 +8,7 @@ namespace Entities
         public string? Type { get; set; }
 
         public virtual List<ProjectEntity>? ProjectList { get; set; }
-        public virtual List<ProjectTechnology>? ProjectTechnologies { get; set; }
+        public virtual List<ProjectTechnologyEntity>? ProjectTechnologies { get; set; }
         public virtual List<UserEntity>? UserList { get; set; }
         public virtual List<UserTechnologyEntity>? UserTechnologies { get; set; }
     }

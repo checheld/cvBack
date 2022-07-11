@@ -12,7 +12,7 @@ namespace Entities
         public string Link { get; set; }
         public virtual List<ProjectPhotoEntity>? PhotoList { get; set; }
         public virtual List<TechnologyEntity>? TechnologyList { get; set; }
-        public virtual List<ProjectTechnology>? ProjectTechnology { get; set; }
+        public virtual List<ProjectTechnologyEntity>? ProjectTechnology { get; set; }
         public virtual List<ProjectCVEntity>? CVProjectCVList { get; set; }
 
     }

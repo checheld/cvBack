@@ -1,5 +1,4 @@
-﻿using Domain;
-using Entities;
+﻿using Entities;
 
 namespace Mappers
 {

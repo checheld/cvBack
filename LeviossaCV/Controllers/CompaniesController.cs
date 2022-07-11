@@ -1,50 +1,41 @@
 ﻿using Domain;
 using Microsoft.AspNetCore.Mvc;
-using Services.Abstract;
+using Services.Utility.Interface;
 
 namespace API.Controllers
 {
     [ApiController]
     public class CompaniesController : ControllerBase
     {
-        private readonly ICompaniesService _companiesService;
-        public CompaniesController(IServiceProvider _serviceProvider)
+        private readonly IServiceManager _serviceManager;
+        public CompaniesController(IServiceManager serviceManager)
         {
-            _companiesService = _serviceProvider.GetService<ICompaniesService>();
+            _serviceManager = serviceManager;
         }
 
         [HttpPost]
         [Route("companies/add")]
         public async Task<IActionResult> AddCompany([FromBody] List<CompanyDTO> company)
         {
-            if (company != null)
+            try
             {
-                var companies = new List<CompanyDTO>();
-                foreach (CompanyDTO i in company)
-                {
-                    try
-                    {
-                        companies.Add(await _companiesService.AddCompany(i));
-                    }
-                    catch (Exception ex)
-                    {
-                        return BadRequest(ex.Message);
-                    }
-                }
-                return Ok(companies);
-
+                return Ok(await _serviceManager.CompaniesService.AddCompanies(company));
             }
-            return null;
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut]
         [Route("companies/{id}")]
         public async Task<IActionResult> UpdateCompany([FromBody] CompanyDTO company, int id)
         {
-            company.Id = id;
             try
             {
-                return Ok(await _companiesService.UpdateCompany(company));
+                company.Id = id;
+
+                return Ok(await _serviceManager.CompaniesService.UpdateCompany(company));
             }
             catch (Exception ex)
             {
@@ -58,7 +49,7 @@ namespace API.Controllers
         {
             try
             {
-                return Ok(await _companiesService.GetAllCompanies());
+                return Ok(await _serviceManager.CompaniesService.GetAllCompanies());
             }
             catch (Exception ex)
             {
@@ -72,7 +63,7 @@ namespace API.Controllers
         {
             try
             {
-                return Ok(await _companiesService.GetCompanyById(id));
+                return Ok(await _serviceManager.CompaniesService.GetCompanyById(id));
             }
             catch (Exception ex)
             {
@@ -86,7 +77,7 @@ namespace API.Controllers
         {
             try
             {
-                return Ok(await _companiesService.GetCompaniesBySearch(search));
+                return Ok(await _serviceManager.CompaniesService.GetCompaniesBySearch(search));
             }
             catch (Exception ex)
             {
@@ -99,7 +90,9 @@ namespace API.Controllers
         {
             try
             {
-                return Ok(await _companiesService.DeleteCompanyById(id));
+                await _serviceManager.CompaniesService.DeleteCompanyById(id);
+
+                return Ok();
             }
             catch (Exception ex)
             {

@@ -1,5 +1,4 @@
-﻿using Data.Repositories.Abstract;
-using Microsoft.Extensions.DependencyInjection;
+﻿#region Imports
 using RazorEngine.Templating;
 using RazorEngine;
 using Services.Abstract;
@@ -8,21 +7,20 @@ using AutoMapper;
 using Services.Utility;
 using Entities;
 using Microsoft.Playwright;
+using Data.Repositories.Utility.Interface;
+#endregion
 
 namespace Services
 {
     public class PdfService : IPdfService
     {
-        private readonly ICVsRepository _CVsRepository;
-        private readonly IUsersRepository _usersRepository;
-        private readonly IProjectsRepository _projectsRepository;
+        #region Logic
+        private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
-        public PdfService(IMapper mapper, IServiceProvider _serviceProvider)
+        public PdfService(IMapper mapper, IRepositoryManager repositoryManager)
         {
             _mapper = mapper;
-            _CVsRepository = _serviceProvider.GetService<ICVsRepository>();
-            _usersRepository = _serviceProvider.GetService<IUsersRepository>();
-            _projectsRepository = _serviceProvider.GetService<IProjectsRepository>();
+            _repositoryManager = repositoryManager;
         }
 
         public class AppMappingProject : Profile
@@ -41,14 +39,16 @@ namespace Services
                 CreateMap<CompanyDTO, CompanyEntity>().ForMember(x => x.WorkExperienceCompanyList, y => y.MapFrom(t => t.WorkExperienceCompanyList)).ReverseMap();
             }
         }
+        #endregion
 
         public async Task<byte[]> GetPdf(int id)
         {
-            var getCV = await this._CVsRepository.GetCVById(id);
-            var getUser = await this._usersRepository.GetUserById(getCV.UserId);
+            var getCV = await this._repositoryManager.CVsRepository.GetCVById(id);
+            var getUser = await this._repositoryManager.UsersRepository.GetUserById(getCV.UserId);
 
             var projectCVList = new List<ProjectCVDTO>();
             var projectCVs = getCV.ProjectCVList;
+
             foreach (var projectCV in projectCVs)
             {
                 projectCVList.Add(_mapper.Map<ProjectCVDTO>(projectCV));
@@ -56,6 +56,7 @@ namespace Services
 
             var UserEducationList = new List<EducationDTO>();
             var Educations = getUser.EducationList;
+
             foreach (var Education in Educations)
             {
                 UserEducationList.Add(_mapper.Map<EducationDTO>(Education));
@@ -63,6 +64,7 @@ namespace Services
 
             var UserWorkExperienceList = new List<WorkExperienceDTO>();
             var WorkExperiences = getUser.WorkExperienceList;
+
             foreach (var WorkExperience in WorkExperiences)
             {
                 UserWorkExperienceList.Add(_mapper.Map<WorkExperienceDTO>(WorkExperience));
@@ -70,6 +72,7 @@ namespace Services
 
             var UserTechnologyList = new List<TechnologyDTO>();
             var Technologies = getUser.TechnologyList;
+
             foreach (var Technology in Technologies)
             {
                 UserTechnologyList.Add(_mapper.Map<TechnologyDTO>(Technology));
@@ -77,24 +80,21 @@ namespace Services
 
             object CvforPdf = new PdfDTO
             {
-                    FirstName = getUser.FirstName,
-                    LastName = getUser.LastName,
-                    Description = getUser.Description,
-                    photoUrl = getUser.photoUrl,
-                    EducationList = UserEducationList,
-                    WorkExperienceList = UserWorkExperienceList,
-                    TechnologyList = UserTechnologyList,
-                    ProjectCVList = projectCVList
-                };
+                #region Elements
+                FirstName = getUser.FirstName,
+                LastName = getUser.LastName,
+                Description = getUser.Description,
+                photoUrl = getUser.photoUrl,
+                EducationList = UserEducationList,
+                WorkExperienceList = UserWorkExperienceList,
+                TechnologyList = UserTechnologyList,
+                ProjectCVList = projectCVList
+                #endregion
+            };
            
             string template = RazorConfiguration.myPdf;
             string result = Engine.Razor.RunCompile(template, "tempalateKey", null, CvforPdf);
-            /*File.WriteAllText("input.html", result);*/
-            /* PdfDocument pdfDocument = PdfGenerator.GeneratePdf(result, PageSize.A4);
-             *//*pdfDocument.Save("D:/Work/cv/cvback/LeviossaCV/HTML to PDF Document.pdf");*//*
-             MemoryStream stream = new MemoryStream();
-             pdfDocument.Save(stream, false);
-             byte[] bytes = stream.ToArray();*/
+          
             Microsoft.Playwright.Program.Main(new[] { "install" });
             var dataUrl = "data:text/html;base64," + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(result));
             using var playwright = await Playwright.CreateAsync();
@@ -102,18 +102,15 @@ namespace Services
             {
                 Headless = true,
             });
-            /*var browser = await playwright.Webkit.LaunchAsync();*/
+
             await using var context = await browser.NewContextAsync();
             var page = await context.NewPageAsync();
 
             await page.GotoAsync(dataUrl, new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle });
-
-            /*var test = page.Locator("id = main-content");*/
             
             var output = await page.PdfAsync(new PagePdfOptions
             {
                 Format = "A4",
-                /*Format = PaperFormat.*/
                 Landscape = false,
                 
             });

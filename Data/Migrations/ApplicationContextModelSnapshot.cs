@@ -22,6 +22,31 @@ namespace Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("Data.Entities.PhotoParamsEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("PositionX")
+                        .HasColumnType("float");
+
+                    b.Property<double>("PositionY")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Scale")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PhotoParams");
+                });
+
             modelBuilder.Entity("Data.Entities.ProjectPhotoEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -288,10 +313,15 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("PhotoParamsId")
+                        .HasColumnType("int");
+
                     b.Property<string>("photoUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PhotoParamsId");
 
                     b.ToTable("Users");
                 });
@@ -424,6 +454,15 @@ namespace Data.Migrations
                     b.Navigation("Project");
 
                     b.Navigation("Technology");
+                });
+
+            modelBuilder.Entity("Entities.UserEntity", b =>
+                {
+                    b.HasOne("Data.Entities.PhotoParamsEntity", "PhotoParams")
+                        .WithMany()
+                        .HasForeignKey("PhotoParamsId");
+
+                    b.Navigation("PhotoParams");
                 });
 
             modelBuilder.Entity("Entities.UserTechnologyEntity", b =>

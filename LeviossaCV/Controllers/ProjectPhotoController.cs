@@ -1,16 +1,15 @@
-﻿using Domain;
-using Microsoft.AspNetCore.Mvc;
-using Services.Abstract;
+﻿using Microsoft.AspNetCore.Mvc;
+using Services.Utility.Interface;
 
 namespace LeviossaCV.Controllers
 {
     [ApiController]
     public class ProjectPhotoController : ControllerBase
     {
-        private readonly IProjectPhotoService _projectPhotoService;
-        public ProjectPhotoController(IServiceProvider _serviceProvider)
+        private readonly IServiceManager _serviceManager;
+        public ProjectPhotoController(IServiceManager serviceManager)
         {
-            _projectPhotoService = _serviceProvider.GetService<IProjectPhotoService>();
+            _serviceManager = serviceManager;
         }
 
         [HttpPost]
@@ -19,7 +18,7 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _projectPhotoService.AddProjectPhoto(image));
+                return Ok(await _serviceManager.ProjectPhotoService.AddProjectPhoto(image));
             }
             catch (Exception ex)
             {
@@ -33,7 +32,9 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _projectPhotoService.DeleteProjectPhotoById(id));
+                await _serviceManager.ProjectPhotoService.DeleteProjectPhotoById(id);
+
+                return Ok();
             }
             catch (Exception ex)
             {

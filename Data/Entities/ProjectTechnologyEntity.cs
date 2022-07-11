@@ -1,7 +1,7 @@
 ﻿
 namespace Entities
 {
-    public class ProjectTechnology
+    public class ProjectTechnologyEntity
     {
         public int ProjectId { get; set; }
         public ProjectEntity Project { get; set; }

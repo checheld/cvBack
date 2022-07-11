@@ -1,7 +1,9 @@
-﻿using Data.Repositories.Abstract;
+﻿#region Imports
+using Data.Repositories.Abstract;
 using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+#endregion
 
 namespace Data.Repositories
 {
@@ -12,47 +14,57 @@ namespace Data.Repositories
         {
             db = _serviceProvider.GetService<ApplicationContext>();
         }
-        public async Task<UniversityEntity> AddUniversity(UniversityEntity university)
+
+        public async Task<List<UniversityEntity>> AddUniversities(List<UniversityEntity> university)
         {
-            var foundUniversity = await db.Universities.SingleOrDefaultAsync(x => x.Id == university.Id);
-            if (foundUniversity == null)
+            try
             {
-                await db.Universities.AddAsync(university);
+                await db.Universities.AddRangeAsync(university);
                 await db.SaveChangesAsync();
+
                 return university;
             }
-            return null;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
-        public async Task<string> DeleteUniversityById(int id)
+        public async Task DeleteUniversityById(int id)
         {
-            var foundUniversity = await db.Universities.SingleOrDefaultAsync(x => x.Id == id);
-            if (foundUniversity != null)
+            try
             {
-                db.Universities.Remove(foundUniversity);
+                db.Universities.Remove(await db.Universities.SingleOrDefaultAsync(x => x.Id == id));
                 await db.SaveChangesAsync();
             }
-            return null;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<List<UniversityEntity>> GetAllUniversities()
         {
-            var universities = await db.Universities.ToListAsync();
-            if (universities != null)
+            try
             {
-                return universities;
+                return await db.Universities.ToListAsync();
             }
-            return null;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<UniversityEntity> GetUniversityById(int id)
         {
-            var university = await db.Universities.SingleOrDefaultAsync(x => x.Id == id);
-            if (university != null)
+            try
             {
-                return university;
+                return await db.Universities.SingleOrDefaultAsync(x => x.Id == id);
             }
-            return null;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<List<UniversityEntity>> GetUniversitiesBySearch(string search)
@@ -65,7 +77,6 @@ namespace Data.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
                 throw ex;
             }
         }
@@ -76,12 +87,12 @@ namespace Data.Repositories
             {
                 db.Universities.Update(university);
                 await db.SaveChangesAsync();
+
                 return university;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return null;
+                throw ex;
             }
         }
     }

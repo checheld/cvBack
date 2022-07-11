@@ -1,34 +1,37 @@
-﻿using AutoMapper;
+﻿#region Imports
+using AutoMapper;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Data.Entities;
-using Data.Repositories.Abstract;
+using Data.Repositories.Utility.Interface;
 using Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Services.Abstract;
+#endregion
 
 namespace Services
 {
     public class ProjectPhotoService : IProjectPhotoService
     {
-        private readonly IProjectPhotoRepository _projectPhotoRepository;
+        #region Logic
+        private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
         public IConfiguration Configuration { get; }
         private Account CloudinaryAccount { get; }
         private Cloudinary _cloudinary;
 
-        public ProjectPhotoService(IMapper mapper, IServiceProvider _serviceProvider, IConfiguration configuration)
+        public ProjectPhotoService(IMapper mapper, IRepositoryManager repositoryManager, IConfiguration configuration)
         {
             _mapper = mapper;
-            _projectPhotoRepository = _serviceProvider.GetService<IProjectPhotoRepository>();
+            _repositoryManager = repositoryManager;
             Configuration = configuration;
 
             CloudinaryAccount = new Account(Configuration.GetSection("CloudinarySettings")["CloudName"],
                  Configuration.GetSection("CloudinarySettings")["ApiKey"],
                  Configuration.GetSection("CloudinarySettings")["ApiSecret"]);
         }
+
         public class AppMappingProjectPhoto : Profile
         {
             public AppMappingProjectPhoto()
@@ -36,6 +39,8 @@ namespace Services
                 CreateMap<ProjectPhotoDTO, ProjectPhotoEntity>().ReverseMap();
             }
         }
+        #endregion
+
         public async Task<string> AddProjectPhoto(IFormFile image)
         {
             try
@@ -49,7 +54,6 @@ namespace Services
                         File = new FileDescription(image.Name, stream)
                     };
 
-
                     uploadResult = new Cloudinary(CloudinaryAccount).Upload(uploadParams);
                 }
 
@@ -61,21 +65,21 @@ namespace Services
             }
         }
 
-        public async Task<string> DeleteProjectPhotoById(int id)
+        public async Task DeleteProjectPhotoById(int id)
         {
             try
             {
-                var pp = _mapper.Map<ProjectPhotoDTO>(await _projectPhotoRepository.GetProjectPhotoById(id));
+                var pp = _mapper.Map<ProjectPhotoDTO>(await _repositoryManager.ProjectPhotoRepository.GetProjectPhotoById(id));
                 var prodId1 = pp.Url.Split("upload/")[1];
                 var prodId2 = prodId1.Split("/")[1];
                 var prodId3 = prodId2.Split(".")[0];
                 new Cloudinary(CloudinaryAccount).DeleteResourcesAsync(prodId3);
  
-                return await _projectPhotoRepository.DeleteProjectPhotoById(id);
+                await _repositoryManager.ProjectPhotoRepository.DeleteProjectPhotoById(id);
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                throw ex;
             }
         }
     }

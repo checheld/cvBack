@@ -4,11 +4,11 @@ namespace Data.Repositories.Abstract
 {
     public interface ICompaniesRepository
     {
-        Task<CompanyEntity> AddCompany(CompanyEntity company);
+        Task<List<CompanyEntity>> AddCompanies(List<CompanyEntity> company);
         Task<CompanyEntity> UpdateCompany(CompanyEntity company);
         Task<CompanyEntity> GetCompanyById(int id);
         Task<List<CompanyEntity>> GetCompaniesBySearch(string search);
-        Task<string> DeleteCompanyById(int id);
+        Task DeleteCompanyById(int id);
         Task<List<CompanyEntity>> GetAllCompanies();
     }
 }

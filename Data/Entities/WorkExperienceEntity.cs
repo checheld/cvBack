@@ -1,11 +1,10 @@
-﻿
-using Entities.Abstract;
+﻿using Entities.Abstract;
 
 namespace Entities
 {
     public class WorkExperienceEntity : BaseEntity
     {
-        public int? CompanyId { get; set; }
+        public int CompanyId { get; set; }
         public virtual CompanyEntity? Company { get; set; }
         public string Position { get; set; }
         public string StartDate { get; set; }

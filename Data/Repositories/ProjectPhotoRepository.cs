@@ -1,7 +1,9 @@
-﻿using Data.Entities;
+﻿#region Imports
+using Data.Entities;
 using Data.Repositories.Abstract;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+#endregion
 
 namespace Data.Repositories
 {
@@ -13,20 +15,29 @@ namespace Data.Repositories
             db = _serviceProvider.GetService<ApplicationContext>();
         }
 
-        public async Task<string> DeleteProjectPhotoById(int id)
+        public async Task DeleteProjectPhotoById(int id)
         {
-            var foundProjectPhoto = await db.ProjectPhotoEntity.SingleOrDefaultAsync(x => x.Id == id);
-            if (foundProjectPhoto != null)
+            try
             {
-                db.ProjectPhotoEntity.Remove(foundProjectPhoto);
+                db.ProjectPhotoEntity.Remove(await db.ProjectPhotoEntity.SingleOrDefaultAsync(x => x.Id == id));
                 await db.SaveChangesAsync();
             }
-            return null;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<ProjectPhotoEntity> GetProjectPhotoById(int id)
         {
-            return await db.ProjectPhotoEntity.SingleOrDefaultAsync(x => x.Id == id);
+            try
+            {
+                return await db.ProjectPhotoEntity.SingleOrDefaultAsync(x => x.Id == id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

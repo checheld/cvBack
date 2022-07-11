@@ -1,16 +1,17 @@
 ﻿using Domain;
 using Microsoft.AspNetCore.Mvc;
-using Services.Abstract;
+using Services.Utility.Interface;
 
 namespace LeviossaCV.Controllers
 {
     [ApiController]
     public class TechnologiesController : ControllerBase
     {
-        private readonly ITechnologiesService _technologiesService;
-        public TechnologiesController(IServiceProvider _serviceProvider)
+        private readonly IServiceManager _serviceManager;
+        public TechnologiesController(IServiceManager serviceManager)
         {
-            _technologiesService = _serviceProvider.GetService<ITechnologiesService>();
+            _serviceManager = serviceManager;
+
         }
 
         [HttpPost]
@@ -19,7 +20,7 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _technologiesService.AddTechnology(technology));
+                return Ok(await _serviceManager.TechnologiesService.AddTechnology(technology));
             }
             catch (Exception ex)
             {
@@ -31,10 +32,11 @@ namespace LeviossaCV.Controllers
         [Route("technologies/{id}")]
         public async Task<IActionResult> UpdateTechnology([FromBody] TechnologyDTO technology, int id)
         {
-            technology.Id = id;
             try
             {
-                return Ok(await _technologiesService.UpdateTechnology(technology));
+                technology.Id = id;
+
+                return Ok(await _serviceManager.TechnologiesService.UpdateTechnology(technology));
             }
             catch (Exception ex)
             {
@@ -48,7 +50,7 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _technologiesService.GetAllTechnologies());
+                return Ok(await _serviceManager.TechnologiesService.GetAllTechnologies());
             }
             catch (Exception ex)
             {
@@ -62,7 +64,7 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _technologiesService.GetTechnologyById(id));
+                return Ok(await _serviceManager.TechnologiesService.GetTechnologyById(id));
             }
             catch (Exception ex)
             {
@@ -76,7 +78,7 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _technologiesService.GetTechnologiesBySearch(search));
+                return Ok(await _serviceManager.TechnologiesService.GetTechnologiesBySearch(search));
             }
             catch (Exception ex)
             {
@@ -90,7 +92,9 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _technologiesService.DeleteTechnologyById(id));
+                await _serviceManager.TechnologiesService.DeleteTechnologyById(id);
+
+                return Ok();
             }
             catch (Exception ex)
             {

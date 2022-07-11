@@ -1,23 +1,24 @@
-﻿using Data.Repositories.Abstract;
+﻿#region Imports
 using Domain;
 using Entities;
-using Microsoft.Extensions.DependencyInjection;
 using Services.Abstract;
 using AutoMapper;
+using Data.Repositories.Utility.Interface;
+#endregion
 
 namespace Services
 {
     public class TechnologiesService : ITechnologiesService
     {
-        private readonly ITechnologiesRepository _technologiesRepository;
+        #region Logic
+        private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
-        public TechnologiesService(IMapper mapper, IServiceProvider _serviceProvider)
+        public TechnologiesService(IMapper mapper, IRepositoryManager repositoryManager)
         {
             _mapper = mapper;
-            _technologiesRepository = _serviceProvider.GetService<ITechnologiesRepository>();
+            _repositoryManager = repositoryManager;
         }
 
-        // autoMapper
         public class AppMappingTechnology : Profile
         {
             public AppMappingTechnology()
@@ -25,39 +26,34 @@ namespace Services
                 CreateMap<TechnologyDTO, TechnologyEntity>().ReverseMap();
             }
         }
-        //
+        #endregion
 
         public async Task<TechnologyDTO> AddTechnology(TechnologyDTO technology)
         {
             try
             {
-                /*TechnologyEntity newTechnology = TechnologyMapper.ToEntity(technology);*/
                 var newTechnology = _mapper.Map<TechnologyEntity>(technology);
                 newTechnology.CreatedAt = DateTime.Now;
-                TechnologyEntity u = await _technologiesRepository.AddTechnology(newTechnology);
-                if (u != null)
-                {
-                    /*TechnologyDTO item = TechnologyMapper.ToDomain(u);*/
-                    var item = _mapper.Map<TechnologyDTO>(u);
-                    return item;
-                };
+
+                TechnologyEntity u = await _repositoryManager.TechnologiesRepository.AddTechnology(newTechnology);
+
+                return _mapper.Map<TechnologyDTO>(u);
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(ex);
+                throw ex;
             }
-            return null;
         }
         
-        public async Task<string> DeleteTechnologyById(int id)
+        public async Task DeleteTechnologyById(int id)
         {
             try
             {
-                return await _technologiesRepository.DeleteTechnologyById(id);
+                await _repositoryManager.TechnologiesRepository.DeleteTechnologyById(id);
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                throw ex;
             }
         }
         
@@ -65,12 +61,11 @@ namespace Services
         {
             try
             {
-                /*return TechnologyMapper.ToDomain(await _technologiesRepository.GetTechnologyById(id));*/
-                return _mapper.Map<TechnologyDTO>(await _technologiesRepository.GetTechnologyById(id));
+                return _mapper.Map<TechnologyDTO>(await _repositoryManager.TechnologiesRepository.GetTechnologyById(id));
             }
             catch (Exception ex)
             {
-                return null;
+                throw ex;
             }
         }
         
@@ -78,19 +73,20 @@ namespace Services
         {
             try
             {
-                /*return TechnologyMapper.ToDomainList(await _technologiesRepository.GetTechnologiesBySearch(search));*/
+                var searchTechnologies = await _repositoryManager.TechnologiesRepository.GetTechnologiesBySearch(search);
 
-                var searchTechnologies = await _technologiesRepository.GetTechnologiesBySearch(search);
                 List<TechnologyDTO> technologies = new List<TechnologyDTO>();
+
                 foreach (TechnologyEntity technology in searchTechnologies)
                 {
                     technologies.Add(_mapper.Map<TechnologyDTO>(technology));
                 }
+
                 return technologies;
             }
             catch (Exception ex)
             {
-                return null;
+                throw ex;
             }
         }
 
@@ -98,13 +94,12 @@ namespace Services
         {
             try
             {
-                /*return TechnologyMapper.ToDomain(await _technologiesRepository.UpdateTechnology(TechnologyMapper.ToEntity(technology)));*/
-                return _mapper.Map<TechnologyDTO>(await _technologiesRepository.UpdateTechnology(_mapper.Map<TechnologyEntity>(technology)));
+                return _mapper.Map<TechnologyDTO>(await _repositoryManager.TechnologiesRepository
+                    .UpdateTechnology(_mapper.Map<TechnologyEntity>(technology)));
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return null;
+                throw ex;
             }
         }
 
@@ -112,15 +107,16 @@ namespace Services
         {
             try
             {
-                List<TechnologyEntity> technologyEntityList = await _technologiesRepository.GetAllTechnologies();
+                List<TechnologyEntity> technologyEntityList = await _repositoryManager.TechnologiesRepository.GetAllTechnologies();
+
                 List<TechnologyDTO> technologyDomainList = new List<TechnologyDTO>();
-                /*technologyEntityList.ForEach(x => technologyDomainList.Add(TechnologyMapper.ToDomain(x)));*/
                 technologyEntityList.ForEach(x => technologyDomainList.Add(_mapper.Map<TechnologyDTO>(x)));
+
                 return technologyDomainList;
             }
             catch (Exception ex)
             {
-                return null;
+                throw ex;
             }
         }
     }

@@ -9,7 +9,7 @@ namespace Data.Repositories.Infrastructure
         public void Configure(EntityTypeBuilder<TechnologyEntity> entityTypeBuilder)
         {
             entityTypeBuilder.HasKey(x => x.Id);
-            entityTypeBuilder.HasMany(x => x.ProjectList).WithMany(x => x.TechnologyList).UsingEntity<ProjectTechnology>
+            entityTypeBuilder.HasMany(x => x.ProjectList).WithMany(x => x.TechnologyList).UsingEntity<ProjectTechnologyEntity>
                 (
                 j => j
                     .HasOne(pt => pt.Project)

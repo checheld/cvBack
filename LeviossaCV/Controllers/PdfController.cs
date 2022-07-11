@@ -1,6 +1,4 @@
-﻿using Domain;
-using Microsoft.AspNetCore.Mvc;
-using Services;
+﻿using Microsoft.AspNetCore.Mvc;
 using Services.Abstract;
 
 namespace LeviossaCV.Controllers
@@ -21,7 +19,6 @@ namespace LeviossaCV.Controllers
             try
             {
                 return Ok(await _PdfService.GetPdf(id));
-
             }
             catch (Exception ex)
             {

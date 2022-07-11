@@ -5,7 +5,7 @@ namespace Domain
 {
     public class WorkExperienceDTO : BaseDomain
     {
-        public int? CompanyId { get; set; }
+        public int CompanyId { get; set; }
         public virtual CompanyDTO? Company { get; set; }
         public string Position { get; set; }
         public string StartDate { get; set; }

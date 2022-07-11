@@ -1,7 +1,9 @@
-﻿using Data.Repositories.Abstract;
+﻿#region Imports
+using Data.Repositories.Abstract;
 using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+#endregion
 
 namespace Data.Repositories
 {
@@ -12,44 +14,15 @@ namespace Data.Repositories
         {
             db = _serviceProvider.GetService<ApplicationContext>();
         }
+
         public async Task<ProjectEntity> AddProject(ProjectEntity project)
         {
             try
             {
-                var newModel = new ProjectEntity
-                {
-                    Country = project.Country,
-                    CreatedAt = project.CreatedAt,
-                    Description = project.Description,
-                    Link = project.Link,
-                    Name = project.Name,
-                    Type = project.Type,
-                    PhotoList = project.PhotoList
-                };
-                var technologies = project.TechnologyList;
-                var links = new List<ProjectTechnology>();  
-
-                await db.Projects.AddAsync(newModel);
+                await db.Projects.AddAsync(project);
                 await db.SaveChangesAsync();
 
-                var addedProject = await db.Projects.Where(x => x.CreatedAt == newModel.CreatedAt)
-                    .FirstOrDefaultAsync();
-                foreach (var technology in technologies)
-                {
-                    links.Add(new ProjectTechnology
-                        {
-                            ProjectId = addedProject.Id,
-                            TechnologyId = technology.Id
-                        }
-                    );
-                }
-                await db.ProjectTechnology.AddRangeAsync(links);
-
-                await db.SaveChangesAsync();
-
-                project.TechnologyList.Select(c => { c.ProjectList = null; return c; }).ToList();
-
-                return await GetProjectById(newModel.Id);
+                return await GetProjectById(project.Id);
             }
             catch (Exception ex)
             {
@@ -57,51 +30,78 @@ namespace Data.Repositories
             }
         }
 
-        public async Task<string> DeleteProjectById(int id)
+        public async Task AddProjectTechnology(List<ProjectTechnologyEntity> projectTechnology)
         {
-            var foundProject = await db.Projects.SingleOrDefaultAsync(x => x.Id == id);
-            if (foundProject != null)
+            try
             {
-                db.Projects.Remove(foundProject);
+                await db.ProjectTechnology.AddRangeAsync(projectTechnology);
                 await db.SaveChangesAsync();
             }
-            return null;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task DeleteProjectById(int id)
+        {
+            try
+            {
+                db.Projects.Remove(await db.Projects.SingleOrDefaultAsync(x => x.Id == id));
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task RemoveAllProjectPhotos(int projectId)
         {
-            var get = await db.ProjectPhotoEntity.Where(x => x.ProjectId == projectId).ToListAsync();
-            db.ProjectPhotoEntity.RemoveRange(get);
-            await db.SaveChangesAsync();
+            try
+            {
+                var get = await db.ProjectPhotoEntity.Where(x => x.ProjectId == projectId).ToListAsync();
+                db.ProjectPhotoEntity.RemoveRange(get);
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
-
 
         public async Task<List<ProjectEntity>> GetAllProjects()
         {
-            var projects = await db.Projects
+            try
+            {
+                var projects = await db.Projects
                 .Include(x => x.TechnologyList)
                 .Include(x => x.PhotoList)
                 .ToListAsync();
 
-            if (projects != null)
-            {
                 return projects;
             }
-            return null;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<ProjectEntity> GetProjectById(int id)
         {
-            var project = await db.Projects
+            try
+            {
+                var project = await db.Projects
                 .Include(x => x.TechnologyList).ThenInclude(z => z.ProjectList)
                 .Include(x => x.PhotoList)
                 .SingleOrDefaultAsync(x => x.Id == id);
 
-            if (project != null)
-            {
                 return project;
             }
-            return null;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<List<ProjectEntity>> GetProjectsBySearch(SearchProjectsEntity searchProjects)
@@ -118,40 +118,27 @@ namespace Data.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
                 throw ex;
             }
         }
+
         public async Task<ProjectEntity> UpdateProject(ProjectEntity project)
         {
             try
             {
-                var links = new List<ProjectTechnology>();
                 var findededConnection = await db.ProjectTechnology.Where(x => x.ProjectId == project.Id)
                    .ToListAsync();
                 db.ProjectTechnology.RemoveRange(findededConnection);
                 await db.SaveChangesAsync();
 
-                var technologies = project.TechnologyList;
-                foreach (var technology in technologies)
-                {
-                    links.Add(new ProjectTechnology
-                    {
-                        ProjectId = project.Id,
-                        TechnologyId = technology.Id
-                    }
-                    );
-                }
-                await db.ProjectTechnology.AddRangeAsync(links);
                 db.Projects.Update(project);
                 await db.SaveChangesAsync();
-                project.TechnologyList.Select(c => { c.ProjectList = null; return c; }).ToList();
+
                 return project;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return null;
+                throw ex;
             }
         }
     }

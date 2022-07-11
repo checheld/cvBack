@@ -1,16 +1,16 @@
 ﻿using Domain;
 using Microsoft.AspNetCore.Mvc;
-using Services.Abstract;
+using Services.Utility.Interface;
 
 namespace LeviossaCV.Controllers
 {
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IUsersService _usersService;
-        public UsersController(IServiceProvider _serviceProvider)
+        private readonly IServiceManager _serviceManager;
+        public UsersController(IServiceManager serviceManager)
         {
-            _usersService = _serviceProvider.GetService<IUsersService>();
+            _serviceManager = serviceManager;
         }
 
         [HttpPost]
@@ -19,7 +19,7 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _usersService.AddUser(user));
+                return Ok(await _serviceManager.UsersService.AddUser(user));
             }
             catch (Exception ex)
             {
@@ -34,7 +34,7 @@ namespace LeviossaCV.Controllers
             user.Id = id;
             try
             {
-                return Ok(await _usersService.UpdateUser(user));
+                return Ok(await _serviceManager.UsersService.UpdateUser(user));
             }
             catch (Exception ex)
             {
@@ -48,7 +48,7 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _usersService.GetAllUsers());
+                return Ok(await _serviceManager.UsersService.GetAllUsers());
             }
             catch (Exception ex)
             {
@@ -62,7 +62,7 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _usersService.GetUserById(id));
+                return Ok(await _serviceManager.UsersService.GetUserById(id));
             }
             catch (Exception ex)
             {
@@ -76,7 +76,7 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _usersService.GetUsersBySearch(search));
+                return Ok(await _serviceManager.UsersService.GetUsersBySearch(search));
             }
             catch (Exception ex)
             {
@@ -90,7 +90,8 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _usersService.DeleteUserById(id));
+                await _serviceManager.UsersService.DeleteUserById(id);
+                return Ok();
             }
             catch (Exception ex)
             {
