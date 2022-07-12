@@ -23,8 +23,13 @@ builder.Services.AddControllersWithViews();
 
 IConfiguration configuration = builder.Configuration;
 
-builder.Services.AddDbContext<ApplicationContext>(opts =>
+/*builder.Services.AddDbContext<ApplicationContext>(opts =>
     opts.UseSqlServer(configuration["ConnectionStrings:DefaultConnection"],
+     b => b.MigrationsAssembly("Data")
+     ));*/
+
+builder.Services.AddDbContext<ApplicationContext>(opts =>
+    opts.UseNpgsql(configuration["ConnectionStrings:DefaultConnection"],
      b => b.MigrationsAssembly("Data")
      ));
 
@@ -53,9 +58,10 @@ app.UseCors(x => x
                 /*.WithOrigins("http://localhost:3000")*/
                 .AllowAnyMethod()
                 .AllowAnyHeader()
-                .SetIsOriginAllowed((host) => true)
+                /*.SetIsOriginAllowed((host) => true)*/
                 .AllowCredentials()
-            );
+                .AllowAnyOrigin()
+            ); ;
 
 app.MapRazorPages();
 
