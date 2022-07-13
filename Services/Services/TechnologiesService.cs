@@ -33,7 +33,7 @@ namespace Services
             try
             {
                 var newTechnology = _mapper.Map<TechnologyEntity>(technology);
-                newTechnology.CreatedAt = DateTime.Now;
+                newTechnology.CreatedAt = DateTime.UtcNow;
 
                 TechnologyEntity u = await _repositoryManager.TechnologiesRepository.AddTechnology(newTechnology);
 
