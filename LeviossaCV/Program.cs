@@ -55,7 +55,7 @@ app.MapControllerRoute(
 
 app.MapFallbackToFile("index.html");
 app.UseCors(x => x
-                .WithOrigins("http://localhost:3000", "https://leviossacv.herokuapp.com/")
+                .WithOrigins()
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .SetIsOriginAllowed((host) => true)
@@ -64,5 +64,5 @@ app.UseCors(x => x
 
 app.MapRazorPages();
 
-app.Run("http://localhost:3001");
-/*app.Run();*/
+//app.Run("http://localhost:3001");
+app.Run();
