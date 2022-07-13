@@ -55,15 +55,14 @@ app.MapControllerRoute(
 
 app.MapFallbackToFile("index.html");
 app.UseCors(x => x
-                /*.WithOrigins("http://localhost:3000")*/
+                .WithOrigins("http://localhost:3000")
                 .AllowAnyMethod()
                 .AllowAnyHeader()
-                /*.SetIsOriginAllowed((host) => true)*/
+                .SetIsOriginAllowed((host) => true)
                 .AllowCredentials()
-                .AllowAnyOrigin()
-            ); ;
+            );
 
 app.MapRazorPages();
 
-/*app.Run("http://localhost:3001");*/
-app.Run();
+app.Run("http://localhost:3001");
+/*app.Run();*/

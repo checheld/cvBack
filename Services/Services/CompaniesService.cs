@@ -38,7 +38,7 @@ namespace Services
                 foreach (var c in company)
                 {
                     var newCompany = _mapper.Map<CompanyEntity>(c);
-                    newCompany.CreatedAt = DateTime.Now;
+                    newCompany.CreatedAt = DateTime.UtcNow;
                     companies.Add(newCompany);
                 }
 
