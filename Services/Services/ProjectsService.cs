@@ -51,7 +51,7 @@ namespace Services
                 {
                     #region Elements
                     Country = project.Country,
-                    CreatedAt = DateTime.Now,
+                    CreatedAt = DateTime.UtcNow,
                     Description = project.Description,
                     Link = project.Link,
                     Name = project.Name,
@@ -61,7 +61,7 @@ namespace Services
                 };
 
                 var newProject = _mapper.Map<ProjectEntity>(newModel);
-                newProject.CreatedAt = DateTime.Now;
+                newProject.CreatedAt = DateTime.UtcNow;
 
                 var c = await _repositoryManager.ProjectsRepository.AddProject(newProject);
 

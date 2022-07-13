@@ -47,7 +47,7 @@ namespace Services
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Description = user.Description,
-                    CreatedAt = DateTime.Now,
+                    CreatedAt = DateTime.UtcNow,
                     photoUrl = user.photoUrl,
                     PhotoParamsId = user.PhotoParamsId
                     #endregion
@@ -81,7 +81,7 @@ namespace Services
                         Speciality = education.Speciality,
                         StartDate = education.StartDate,
                         EndDate = education.EndDate,
-                        CreatedAt = DateTime.Now,
+                        CreatedAt = DateTime.UtcNow,
                         UniversityId = education.UniversityId,
                         UserId = u.Id,
                         #endregion
@@ -102,7 +102,7 @@ namespace Services
                         StartDate = workExperience.StartDate,
                         EndDate = workExperience.EndDate,
                         Description = workExperience.Description,
-                        CreatedAt = DateTime.Now,
+                        CreatedAt = DateTime.UtcNow,
                         CompanyId = workExperience.CompanyId,
                         UserId = u.Id
                         #endregion

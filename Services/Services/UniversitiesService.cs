@@ -37,7 +37,7 @@ namespace Services
                 foreach (var u in university)
                 {
                     var newUniversity = _mapper.Map<UniversityEntity>(u);
-                    newUniversity.CreatedAt = DateTime.Now;
+                    newUniversity.CreatedAt = DateTime.UtcNow;
                     universities.Add(newUniversity);
                 }
 

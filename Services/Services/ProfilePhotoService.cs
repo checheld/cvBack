@@ -71,7 +71,7 @@ namespace Services
             try
             {
                 var newPhotoParams = _mapper.Map<PhotoParamsEntity>(photoParams);
-                newPhotoParams.CreatedAt = DateTime.Now;
+                newPhotoParams.CreatedAt = DateTime.UtcNow;
 
                 var pp = await _repositoryManager.ProfilePhotoRepository.AddPhotoParams(newPhotoParams);
               

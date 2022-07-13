@@ -41,13 +41,13 @@ namespace Services
                 {
                     #region Elements
                     CVName = cv.CVName,
-                    CreatedAt = DateTime.Now,
+                    CreatedAt = DateTime.UtcNow,
                     UserId = cv.UserId
                     #endregion
                 };
 
                 CVEntity newCV = _mapper.Map<CVEntity>(newModel);
-                newCV.CreatedAt = DateTime.Now;
+                newCV.CreatedAt = DateTime.UtcNow;
 
                 var c = await _repositoryManager.CVsRepository.AddCV(newCV);
 
