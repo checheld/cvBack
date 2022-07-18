@@ -6,5 +6,7 @@ namespace Data.Repositories.Abstract
     {
         Task<ProjectPhotoEntity> GetProjectPhotoById(int id);
         Task DeleteProjectPhotoById(int id);
+        Task<ProjectPhotoEntity> UpdateProjectPhoto(ProjectPhotoEntity projectPhoto);
+        Task AddProjectPhotos(List<ProjectPhotoEntity> projectPhoto);
     }
 }

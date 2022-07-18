@@ -56,13 +56,10 @@ namespace Services
                     Link = project.Link,
                     Name = project.Name,
                     Type = project.Type,
-                    PhotoList = project.PhotoList
                     #endregion
                 };
 
                 var newProject = _mapper.Map<ProjectEntity>(newModel);
-                newProject.CreatedAt = DateTime.UtcNow;
-
                 var c = await _repositoryManager.ProjectsRepository.AddProject(newProject);
 
                 var technologies = project.TechnologyList;
@@ -78,6 +75,23 @@ namespace Services
                     );
                 }
                 await _repositoryManager.ProjectsRepository.AddProjectTechnology(links);
+
+                var projectPhotos = project.PhotoList;
+                var projectPhotoList = new List<ProjectPhotoEntity>();
+
+                foreach (var projectPhoto in projectPhotos)
+                {
+                    var newProjectPhoto = new ProjectPhotoEntity
+                    {
+                        #region Elements
+                        Url = projectPhoto.Url,
+                        CreatedAt = DateTime.UtcNow,
+                        ProjectId = c.Id,
+                        #endregion
+                    };
+                    projectPhotoList.Add(newProjectPhoto);
+                }
+                await _repositoryManager.ProjectPhotoRepository.AddProjectPhotos(projectPhotoList);
 
                 c.TechnologyList.Select(c => { c.ProjectList = null; return c; }).ToList();
                 c.PhotoList.Select(c => { c.Project = null; return c; }).ToList();
@@ -165,7 +179,7 @@ namespace Services
         {
             try
             {
-                var newModel = new ProjectDTO
+                var newModel = new ProjectEntity
                 {
                     #region Elements
                     Id = project.Id,
@@ -175,7 +189,6 @@ namespace Services
                     Link = project.Link,
                     Name = project.Name,
                     Type = project.Type,
-                    PhotoList = project.PhotoList
                     #endregion
                 };
 
@@ -195,6 +208,46 @@ namespace Services
                     );
                 }
                 await _repositoryManager.ProjectsRepository.AddProjectTechnology(links);
+
+                var projectPhotos = project.PhotoList;
+                var PhotoList = new List<ProjectPhotoEntity>();
+
+                if (project.PhotoList.Count() < p.PhotoList.Count())
+                {
+                    var deleteProjectPhotos = p.PhotoList.ExceptBy(projectPhotos.Select(ed => ed.Id), x => x.Id).ToList();
+                    foreach (var projectPhoto in deleteProjectPhotos)
+                    {
+                        await _repositoryManager.ProjectPhotoRepository.DeleteProjectPhotoById(projectPhoto.Id);
+                    }
+                }
+
+                foreach (var projectPhoto in projectPhotos)
+                {
+                    var findProjectPhoto = await _repositoryManager.ProjectPhotoRepository.GetProjectPhotoById(projectPhoto.Id);
+
+                    if (findProjectPhoto != null)
+                    {
+                        #region Elements
+                        findProjectPhoto.Url = projectPhoto.Url;
+                        findProjectPhoto.ProjectId = p.Id;
+                        findProjectPhoto.CreatedAt = projectPhoto.CreatedAt;
+                        #endregion
+                        await _repositoryManager.ProjectPhotoRepository.UpdateProjectPhoto(findProjectPhoto);
+                    }
+                    else
+                    {
+                        var newProjectPhoto = new ProjectPhotoEntity
+                        {
+                            #region Elements
+                            Url = projectPhoto.Url,
+                            ProjectId = p.Id,
+                            CreatedAt = DateTime.UtcNow
+                            #endregion
+                        };
+                        PhotoList.Add(newProjectPhoto);
+                    }
+                }
+                await _repositoryManager.ProjectPhotoRepository.AddProjectPhotos(PhotoList);
 
                 return _mapper.Map<ProjectDTO>(p);
             }

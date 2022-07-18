@@ -126,15 +126,14 @@ namespace Data.Repositories
         {
             try
             {
-                var findededConnection = await db.ProjectTechnology.Where(x => x.ProjectId == project.Id)
-                   .ToListAsync();
-                db.ProjectTechnology.RemoveRange(findededConnection);
+                db.ProjectTechnology.RemoveRange(await db.ProjectTechnology.Where(x => x.ProjectId == project.Id)
+                   .ToListAsync());
                 await db.SaveChangesAsync();
 
                 db.Projects.Update(project);
                 await db.SaveChangesAsync();
 
-                return project;
+                return await GetProjectById(project.Id);
             }
             catch (Exception ex)
             {

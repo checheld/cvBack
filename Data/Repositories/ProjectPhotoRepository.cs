@@ -39,5 +39,33 @@ namespace Data.Repositories
                 throw ex;
             }
         }
+
+        public async Task<ProjectPhotoEntity> UpdateProjectPhoto(ProjectPhotoEntity projectPhoto)
+        {
+            try
+            {
+                db.ProjectPhotoEntity.Update(projectPhoto);
+                await db.SaveChangesAsync();
+
+                return projectPhoto;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task AddProjectPhotos(List<ProjectPhotoEntity> projectPhoto)
+        {
+            try
+            {
+                await db.ProjectPhotoEntity.AddRangeAsync(projectPhoto);
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
