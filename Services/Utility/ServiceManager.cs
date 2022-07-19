@@ -4,6 +4,7 @@ using Data.Repositories.Utility.Interface;
 using Services.Abstract;
 using Services.Utility.Interface;
 using Microsoft.Extensions.Configuration;
+using CloudinaryDotNet;
 #endregion
 
 namespace Services.Utility
@@ -21,13 +22,13 @@ namespace Services.Utility
         private readonly Lazy<IUsersService> _lazyUsersService;
         #endregion
 
-        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, IConfiguration configuration)
+        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, IConfiguration configuration, Account account)
         {
             #region Logic
             _lazyCompaniesService = new Lazy<ICompaniesService>(() => new CompaniesService(mapper, repositoryManager));
             _lazyCVsService = new Lazy<ICVsService>(() => new CVsService(mapper, repositoryManager));
-            _lazyProfilePhotoService = new Lazy<IProfilePhotoService>(() => new ProfilePhotoService(mapper, repositoryManager, configuration));
-            _lazyProjectPhotoService = new Lazy<IProjectPhotoService>(() => new ProjectPhotoService(mapper, repositoryManager, configuration));
+            _lazyProfilePhotoService = new Lazy<IProfilePhotoService>(() => new ProfilePhotoService(mapper, repositoryManager, account));
+            _lazyProjectPhotoService = new Lazy<IProjectPhotoService>(() => new ProjectPhotoService(mapper, repositoryManager, account));
             _lazyProjectsService = new Lazy<IProjectsService>(() => new ProjectsService(mapper, repositoryManager, configuration));
             _lazyTechnologiesService = new Lazy<ITechnologiesService>(() => new TechnologiesService(mapper, repositoryManager));
             _lazyUniversitiesService = new Lazy<IUniversitiesService>(() => new UniversitiesService(mapper, repositoryManager));

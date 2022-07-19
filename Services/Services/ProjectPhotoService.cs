@@ -17,19 +17,20 @@ namespace Services
         #region Logic
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
-        public IConfiguration Configuration { get; }
-        private Account CloudinaryAccount { get; }
+        private readonly Account _account;
+        /*public IConfiguration Configuration { get; }*/
+        /*private Account CloudinaryAccount { get; }*/
         private Cloudinary _cloudinary;
 
-        public ProjectPhotoService(IMapper mapper, IRepositoryManager repositoryManager, IConfiguration configuration)
+        public ProjectPhotoService(IMapper mapper, IRepositoryManager repositoryManager, Account account)
         {
             _mapper = mapper;
             _repositoryManager = repositoryManager;
-            Configuration = configuration;
+            _account = account;
 
-            CloudinaryAccount = new Account(Configuration.GetSection("CloudinarySettings")["CloudName"],
+            /*CloudinaryAccount = new Account(Configuration.GetSection("CloudinarySettings")["CloudName"],
                  Configuration.GetSection("CloudinarySettings")["ApiKey"],
-                 Configuration.GetSection("CloudinarySettings")["ApiSecret"]);
+                 Configuration.GetSection("CloudinarySettings")["ApiSecret"]);*/
         }
 
         public class AppMappingProjectPhoto : Profile
@@ -54,7 +55,7 @@ namespace Services
                         File = new FileDescription(image.Name, stream)
                     };
 
-                    uploadResult = new Cloudinary(CloudinaryAccount).Upload(uploadParams);
+                    uploadResult = new Cloudinary(_account).Upload(uploadParams);
                 }
 
                 return uploadResult.SecureUrl.AbsoluteUri;
@@ -73,7 +74,7 @@ namespace Services
                 var prodId1 = pp.Url.Split("upload/")[1];
                 var prodId2 = prodId1.Split("/")[1];
                 var prodId3 = prodId2.Split(".")[0];
-                new Cloudinary(CloudinaryAccount).DeleteResourcesAsync(prodId3);
+                new Cloudinary(_account).DeleteResourcesAsync(prodId3);
  
                 await _repositoryManager.ProjectPhotoRepository.DeleteProjectPhotoById(id);
             }

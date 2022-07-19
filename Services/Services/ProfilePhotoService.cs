@@ -17,19 +17,16 @@ namespace Services
         #region Logic
         private readonly IMapper _mapper;
         private readonly IRepositoryManager _repositoryManager;
-        public IConfiguration Configuration { get; }
-        private Account CloudinaryAccount { get; }
+        private readonly Account _account;
+       /* public IConfiguration Configuration { get; }
+        private Account CloudinaryAccount { get; }*/
         private Cloudinary _cloudinary;
 
-        public ProfilePhotoService(IMapper mapper, IRepositoryManager repositoryManager, IConfiguration configuration)
+        public ProfilePhotoService(IMapper mapper, IRepositoryManager repositoryManager, Account account)
         {
             _repositoryManager = repositoryManager;
-            Configuration = configuration;
+            _account = account;
             _mapper = mapper;
-
-            CloudinaryAccount = new Account(Configuration.GetSection("CloudinarySettings")["CloudName"],
-                 Configuration.GetSection("CloudinarySettings")["ApiKey"],
-                 Configuration.GetSection("CloudinarySettings")["ApiSecret"]);
         }
 
         public class AppMappingPhotoParams : Profile
@@ -54,7 +51,7 @@ namespace Services
                         File = new FileDescription(image.Name, stream)
                     };
 
-                    uploadResult = new Cloudinary(CloudinaryAccount).Upload(uploadParams);
+                    uploadResult = new Cloudinary(_account).Upload(uploadParams);
                 }
 
                 return uploadResult.SecureUrl.AbsoluteUri;

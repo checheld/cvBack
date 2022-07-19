@@ -1,4 +1,5 @@
 #region Imports
+using CloudinaryDotNet;
 using Data;
 using Data.Repositories.Utility;
 using Data.Repositories.Utility.Interface;
@@ -45,6 +46,14 @@ builder.Services.AddAutoMapper(typeof(AppMappingUser), typeof(AppMappingCompany)
 
 builder.Services.AddRazorPages();
 
+var cloudinarySettings = new Account
+{
+    Cloud = configuration.GetSection("CloudinarySettings")["CloudName"],
+    ApiKey = configuration.GetSection("CloudinarySettings")["ApiKey"],
+    ApiSecret = configuration.GetSection("CloudinarySettings")["ApiSecret"]
+};
+builder.Services.AddSingleton(cloudinarySettings);
+
 var app = builder.Build();
 
 app.UseRouting();
@@ -64,5 +73,5 @@ app.UseCors(x => x
 
 app.MapRazorPages();
 
-/*app.Run("http://localhost:3001");*/
-app.Run();
+app.Run("http://localhost:3001");
+/*app.Run();*/
