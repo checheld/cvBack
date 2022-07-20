@@ -73,5 +73,5 @@ app.UseCors(x => x
 
 app.MapRazorPages();
 
-app.Run("http://localhost:3001");
-/*app.Run();*/
+/*app.Run("http://localhost:3001");*/
+app.Run();
