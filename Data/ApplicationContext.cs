@@ -23,6 +23,7 @@ namespace Data
         public DbSet<ProjectTechnologyEntity>? ProjectTechnology { get; set; }
         public DbSet<UserTechnologyEntity>? UserTechnology { get; set; }
         public DbSet<PhotoParamsEntity>? PhotoParams { get; set; }
+        public DbSet<ProjectTypeEntity>? ProjectTypes { get; set; }
         #endregion
         public ApplicationContext(DbContextOptions<ApplicationContext> opt) : base(opt)
         {
@@ -41,6 +42,7 @@ namespace Data
             modelBuilder.ApplyConfiguration(new ProjectProjectCVMap());
             modelBuilder.ApplyConfiguration(new CVProjectCVMap());
             modelBuilder.ApplyConfiguration(new ProjectProjectPhotoMap());
+            modelBuilder.ApplyConfiguration(new ProjectProjectTypeMap());
             #endregion
         }
 

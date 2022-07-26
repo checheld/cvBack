@@ -5,6 +5,7 @@ using Services.Abstract;
 using Services.Utility.Interface;
 using Microsoft.Extensions.Configuration;
 using CloudinaryDotNet;
+using Services.Services;
 #endregion
 
 namespace Services.Utility
@@ -20,6 +21,7 @@ namespace Services.Utility
         private readonly Lazy<ITechnologiesService> _lazyTechnologiesService;
         private readonly Lazy<IUniversitiesService> _lazyUniversitiesService;
         private readonly Lazy<IUsersService> _lazyUsersService;
+        private readonly Lazy<IProjectTypesService> _lazyProjectTypesService;
         #endregion
 
         public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, IConfiguration configuration, Account account)
@@ -33,6 +35,7 @@ namespace Services.Utility
             _lazyTechnologiesService = new Lazy<ITechnologiesService>(() => new TechnologiesService(mapper, repositoryManager));
             _lazyUniversitiesService = new Lazy<IUniversitiesService>(() => new UniversitiesService(mapper, repositoryManager));
             _lazyUsersService = new Lazy<IUsersService>(() => new UsersService(mapper, repositoryManager));
+            _lazyProjectTypesService = new Lazy<IProjectTypesService>(() => new ProjectTypesService(mapper, repositoryManager));
             #endregion
         }
 
@@ -45,6 +48,7 @@ namespace Services.Utility
         public ITechnologiesService TechnologiesService => _lazyTechnologiesService.Value;
         public IUniversitiesService UniversitiesService => _lazyUniversitiesService.Value;
         public IUsersService UsersService => _lazyUsersService.Value;
+        public IProjectTypesService ProjectTypesService => _lazyProjectTypesService.Value;
         #endregion
     }
 }

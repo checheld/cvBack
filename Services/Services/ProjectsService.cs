@@ -55,7 +55,7 @@ namespace Services
                     Description = project.Description,
                     Link = project.Link,
                     Name = project.Name,
-                    Type = project.Type,
+                    ProjectTypeId = project.ProjectTypeId,
                     #endregion
                 };
 
@@ -95,6 +95,8 @@ namespace Services
 
                 c.TechnologyList.Select(c => { c.ProjectList = null; return c; }).ToList();
                 c.PhotoList.Select(c => { c.Project = null; return c; }).ToList();
+                c.ProjectType.ProjectProjectTypeList.Select(c => { c.ProjectType = null; return c; }).ToList();
+
                 var item = _mapper.Map<ProjectDTO>(c);
 
                 return item;
@@ -138,6 +140,7 @@ namespace Services
                 var c = await _repositoryManager.ProjectsRepository.GetProjectById(id);
                 c.TechnologyList.Select(c => { c.ProjectList = null; return c; }).ToList();
                 c.PhotoList.Select(c => { c.Project = null; return c; }).ToList();
+                c.ProjectType.ProjectProjectTypeList = null;
 
                 return _mapper.Map<ProjectDTO>(await _repositoryManager.ProjectsRepository.GetProjectById(id));
             }
@@ -153,7 +156,7 @@ namespace Services
             {
                 var searchProjectToEntity = new SearchProjectsEntity()
                 {
-                    Type = searchProjects.Type,
+                    ProjectTypeId = searchProjects.ProjectTypeId,
                     Name = searchProjects.Name,
                     TechnologyName = searchProjects.TechnologyName
                 };
@@ -188,7 +191,7 @@ namespace Services
                     Description = project.Description,
                     Link = project.Link,
                     Name = project.Name,
-                    Type = project.Type,
+                    ProjectTypeId = project.ProjectTypeId,
                     #endregion
                 };
 
@@ -265,9 +268,8 @@ namespace Services
 
                 projectEntityList.ForEach(x => x.TechnologyList.Select(c => { c.ProjectList = null; return c; }).ToList());
                 projectEntityList.ForEach(x => x.PhotoList.Select(c => { c.Project = null; return c; }).ToList());
-
-                List<ProjectDTO> projectDomainList = new List<ProjectDTO>();
-
+                projectEntityList.ForEach(x => x.ProjectType.ProjectProjectTypeList = null);
+                List <ProjectDTO> projectDomainList = new List<ProjectDTO>();
                 projectEntityList.ForEach(x => projectDomainList.Add(_mapper.Map<ProjectDTO>(x)));
 
                 return projectDomainList;

@@ -74,12 +74,11 @@ namespace Data.Repositories
         {
             try
             {
-                var projects = await db.Projects
+                return await db.Projects
                 .Include(x => x.TechnologyList)
                 .Include(x => x.PhotoList)
+                .Include(x => x.ProjectType)
                 .ToListAsync();
-
-                return projects;
             }
             catch (Exception ex)
             {
@@ -94,6 +93,7 @@ namespace Data.Repositories
                 var project = await db.Projects
                 .Include(x => x.TechnologyList).ThenInclude(z => z.ProjectList)
                 .Include(x => x.PhotoList)
+                .Include(x => x.ProjectType)
                 .SingleOrDefaultAsync(x => x.Id == id);
 
                 return project;
@@ -111,7 +111,7 @@ namespace Data.Repositories
                 var findedTech = await db.Technologies.Where(x => x.Name == searchProjects.TechnologyName).FirstOrDefaultAsync(); 
 
                 return await db.Projects
-                    .Where(x => (!String.IsNullOrEmpty(searchProjects.Type) ? x.Type == searchProjects.Type : true) 
+                    .Where(x => ((searchProjects.ProjectTypeId != null) ? x.ProjectTypeId == searchProjects.ProjectTypeId : true)
                     && (!String.IsNullOrEmpty(searchProjects.Name) ? x.Name.Trim().ToLower().Contains(searchProjects.Name) : true)
                     && (!String.IsNullOrEmpty(searchProjects.TechnologyName) ? x.TechnologyList.Any(z => z.Id == findedTech.Id) : true))
                     .ToListAsync();

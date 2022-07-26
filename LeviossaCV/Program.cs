@@ -8,14 +8,17 @@ using Services;
 using Services.Abstract;
 using Services.Utility;
 using Services.Utility.Interface;
+using System.Text.Json.Serialization;
 using static Services.CompaniesService;
 using static Services.CVsService;
 using static Services.ProfilePhotoService;
 using static Services.ProjectPhotoService;
 using static Services.ProjectsService;
+using static Services.Services.ProjectTypesService;
 using static Services.TechnologiesService;
 using static Services.UniversitiesService;
 using static Services.UsersService;
+
 #endregion
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,7 +45,15 @@ builder.Services.AddTransient<IRepositoryManager, RepositoryManager>();
 
 builder.Services.AddAutoMapper(typeof(AppMappingUser), typeof(AppMappingCompany), 
     typeof(AppMappingTechnology), typeof(AppMappingUniversity), typeof(AppMappingProject), 
-    typeof(AppMappingCV), typeof(AppMappingProjectPhoto), typeof(AppMappingPhotoParams));
+    typeof(AppMappingCV), typeof(AppMappingProjectPhoto), typeof(AppMappingPhotoParams), 
+    typeof(AppMappingProjectType));
+
+// this needed for ignore cyclic json objects
+builder.Services.AddControllers().AddJsonOptions(x =>
+    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+// Для запятых
+builder.Services.AddControllers().AddJsonOptions(x =>
+    x.JsonSerializerOptions.AllowTrailingCommas = true);
 
 builder.Services.AddRazorPages();
 

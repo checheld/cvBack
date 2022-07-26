@@ -220,14 +220,12 @@ namespace Services
                 var educations = user.EducationList;
                 var educationList = new List<EducationEntity>();
 
-                if (user.EducationList.Count() < u.EducationList.Count())
+                var deleteEducations = u.EducationList.ExceptBy(educations.Select(ed => ed.Id), x => x.Id).ToList();
+                foreach (var education in deleteEducations)
                 {
-                    var deleteEducations = u.EducationList.ExceptBy(educations.Select(ed => ed.Id), x => x.Id).ToList();
-                    foreach (var education in deleteEducations)
-                    {
-                        await _repositoryManager.UsersRepository.DeleteEducation(education.Id);
-                    }
+                    await _repositoryManager.UsersRepository.DeleteEducation(education.Id);
                 }
+                
 
                 foreach (var education in educations)
                 {
@@ -266,14 +264,10 @@ namespace Services
                 var workExperiences = user.WorkExperienceList;
                 var workExperienceList = new List<WorkExperienceEntity>();
 
-                if (user.WorkExperienceList.Count() < u.WorkExperienceList.Count())
+                var deleteWorkExperiences = u.WorkExperienceList.ExceptBy(workExperiences.Select(ed => ed.Id), x => x.Id).ToList();
+                foreach (var workExp in deleteWorkExperiences)
                 {
-                    var deleteWorkExperiences = u.WorkExperienceList.ExceptBy(workExperiences.Select(ed => ed.Id), x => x.Id).ToList();
-
-                    foreach (var workExp in deleteWorkExperiences)
-                    {
-                        await _repositoryManager.UsersRepository.DeleteWorkExperience(workExp.Id);
-                    }
+                    await _repositoryManager.UsersRepository.DeleteWorkExperience(workExp.Id);
                 }
 
                 foreach (var workExperience in workExperiences)

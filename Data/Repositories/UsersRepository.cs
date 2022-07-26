@@ -89,12 +89,10 @@ namespace Data.Repositories
         {
             try
             {
-                var users = await db.Users.Include(x => x.TechnologyList)
+                return await db.Users.Include(x => x.TechnologyList)
                    .Include(x => x.EducationList).ThenInclude(x => x.University)
                    .Include(x => x.WorkExperienceList).ThenInclude(x => x.Company)
                    .Include(x => x.PhotoParams).ToListAsync();
-
-                return users;
             }
             catch (Exception ex)
             {

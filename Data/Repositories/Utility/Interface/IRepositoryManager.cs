@@ -12,5 +12,6 @@ namespace Data.Repositories.Utility.Interface
         ITechnologiesRepository TechnologiesRepository { get; }
         IUniversitiesRepository UniversitiesRepository { get; }
         IUsersRepository UsersRepository { get; }
+        IProjectTypesRepository ProjectTypesRepository { get; }
     }
 }

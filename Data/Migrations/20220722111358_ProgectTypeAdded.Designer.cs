@@ -3,6 +3,7 @@ using System;
 using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20220722111358_ProgectTypeAdded")]
+    partial class ProgectTypeAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,6 +72,21 @@ namespace Data.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("ProjectPhotoEntity");
+                });
+
+            modelBuilder.Entity("Data.Entities.ProjectProjectTypeEntity", b =>
+                {
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProjectTypeId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ProjectId", "ProjectTypeId");
+
+                    b.HasIndex("ProjectTypeId");
+
+                    b.ToTable("ProjectProjectType");
                 });
 
             modelBuilder.Entity("Data.Entities.ProjectTypeEntity", b =>
@@ -244,12 +261,11 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("ProjectTypeId")
-                        .HasColumnType("integer");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProjectTypeId");
 
                     b.ToTable("Projects");
                 });
@@ -415,6 +431,25 @@ namespace Data.Migrations
                     b.Navigation("Project");
                 });
 
+            modelBuilder.Entity("Data.Entities.ProjectProjectTypeEntity", b =>
+                {
+                    b.HasOne("Entities.ProjectEntity", "Project")
+                        .WithMany("ProjectProjectTypeList")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.Entities.ProjectTypeEntity", "ProjectType")
+                        .WithMany("ProjectProjectTypes")
+                        .HasForeignKey("ProjectTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+
+                    b.Navigation("ProjectType");
+                });
+
             modelBuilder.Entity("Entities.CVEntity", b =>
                 {
                     b.HasOne("Entities.UserEntity", "User")
@@ -458,15 +493,6 @@ namespace Data.Migrations
                     b.Navigation("CV");
 
                     b.Navigation("Project");
-                });
-
-            modelBuilder.Entity("Entities.ProjectEntity", b =>
-                {
-                    b.HasOne("Data.Entities.ProjectTypeEntity", "ProjectType")
-                        .WithMany("ProjectProjectTypeList")
-                        .HasForeignKey("ProjectTypeId");
-
-                    b.Navigation("ProjectType");
                 });
 
             modelBuilder.Entity("Entities.ProjectTechnologyEntity", b =>
@@ -535,7 +561,7 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Entities.ProjectTypeEntity", b =>
                 {
-                    b.Navigation("ProjectProjectTypeList");
+                    b.Navigation("ProjectProjectTypes");
                 });
 
             modelBuilder.Entity("Entities.CompanyEntity", b =>
@@ -553,6 +579,8 @@ namespace Data.Migrations
                     b.Navigation("CVProjectCVList");
 
                     b.Navigation("PhotoList");
+
+                    b.Navigation("ProjectProjectTypeList");
 
                     b.Navigation("ProjectTechnology");
                 });

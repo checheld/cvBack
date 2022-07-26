@@ -12,5 +12,6 @@ namespace Services.Utility.Interface
         ITechnologiesService TechnologiesService { get; }
         IUniversitiesService UniversitiesService { get; }
         IUsersService UsersService { get; }
+        IProjectTypesService ProjectTypesService { get; }
     }
 }

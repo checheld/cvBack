@@ -14,6 +14,8 @@ namespace Data.Repositories.Utility
         private readonly Lazy<ITechnologiesRepository> _lazyTechnologiesRepository;
         private readonly Lazy<IUniversitiesRepository> _lazyUniversitiesRepository;
         private readonly Lazy<IUsersRepository> _lazyUsersRepository;
+        private readonly Lazy<IProjectTypesRepository> _lazyProjectTypesRepository;
+        
         #endregion
         public RepositoryManager(IServiceProvider serviceManager)
         {
@@ -26,6 +28,7 @@ namespace Data.Repositories.Utility
             _lazyTechnologiesRepository = new Lazy<ITechnologiesRepository>(() => new TechnologiesRepository(serviceManager));
             _lazyUniversitiesRepository = new Lazy<IUniversitiesRepository>(() => new UniversitiesRepository(serviceManager));
             _lazyUsersRepository = new Lazy<IUsersRepository>(() => new UsersRepository(serviceManager));
+            _lazyProjectTypesRepository = new Lazy<IProjectTypesRepository>(() => new ProjectTypesRepository(serviceManager));
             #endregion
         }
         #region Resolve Lazy
@@ -37,6 +40,7 @@ namespace Data.Repositories.Utility
         public ITechnologiesRepository TechnologiesRepository => _lazyTechnologiesRepository.Value;
         public IUniversitiesRepository UniversitiesRepository => _lazyUniversitiesRepository.Value;
         public IUsersRepository UsersRepository => _lazyUsersRepository.Value;
+        public IProjectTypesRepository ProjectTypesRepository => _lazyProjectTypesRepository.Value;
         #endregion
     }
 }
