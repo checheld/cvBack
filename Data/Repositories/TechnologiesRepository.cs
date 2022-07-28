@@ -15,11 +15,11 @@ namespace Data.Repositories
             db = _serviceProvider.GetService<ApplicationContext>();
         }
 
-        public async Task<TechnologyEntity> AddTechnology(TechnologyEntity technology)
+        public async Task<List<TechnologyEntity>> AddTechnology(List<TechnologyEntity> technology)
         {
             try
             {
-                await db.Technologies.AddAsync(technology);
+                await db.Technologies.AddRangeAsync(technology);
                 await db.SaveChangesAsync();
 
                 return technology;

@@ -156,7 +156,7 @@ namespace Services
             {
                 var searchProjectToEntity = new SearchProjectsEntity()
                 {
-                    ProjectTypeId = searchProjects.ProjectTypeId,
+                    Type = searchProjects.Type,
                     Name = searchProjects.Name,
                     TechnologyName = searchProjects.TechnologyName
                 };

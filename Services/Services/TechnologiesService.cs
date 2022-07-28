@@ -28,16 +28,26 @@ namespace Services
         }
         #endregion
 
-        public async Task<TechnologyDTO> AddTechnology(TechnologyDTO technology)
+        public async Task<List<TechnologyDTO>> AddTechnology(List<TechnologyDTO> technology)
         {
             try
             {
-                var newTechnology = _mapper.Map<TechnologyEntity>(technology);
-                newTechnology.CreatedAt = DateTime.UtcNow;
+                var technologies = new List<TechnologyEntity>();
 
-                TechnologyEntity u = await _repositoryManager.TechnologiesRepository.AddTechnology(newTechnology);
+                foreach (var tech in technology)
+                {
+                    var newTech = _mapper.Map<TechnologyEntity>(tech);
+                    newTech.CreatedAt = DateTime.UtcNow;
+                    technologies.Add(newTech);
+                }
 
-                return _mapper.Map<TechnologyDTO>(u);
+                var returnTechnologies = await _repositoryManager.TechnologiesRepository.AddTechnology(technologies);
+                var returnTechnologiesMap = new List<TechnologyDTO>();
+
+                returnTechnologies.ForEach(c => returnTechnologiesMap.Add(_mapper.Map<TechnologyDTO>(c)));
+
+                return returnTechnologiesMap;
+
             }
             catch (Exception ex)
             {

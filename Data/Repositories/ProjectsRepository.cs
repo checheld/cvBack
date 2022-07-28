@@ -111,10 +111,10 @@ namespace Data.Repositories
                 var findedTech = await db.Technologies.Where(x => x.Name == searchProjects.TechnologyName).FirstOrDefaultAsync(); 
 
                 return await db.Projects
-                    .Where(x => ((searchProjects.ProjectTypeId != null) ? x.ProjectTypeId == searchProjects.ProjectTypeId : true)
+                    .Where(x => ((searchProjects.Type != null) ? x.ProjectTypeId == searchProjects.Type : true)
                     && (!String.IsNullOrEmpty(searchProjects.Name) ? x.Name.Trim().ToLower().Contains(searchProjects.Name) : true)
                     && (!String.IsNullOrEmpty(searchProjects.TechnologyName) ? x.TechnologyList.Any(z => z.Id == findedTech.Id) : true))
-                    .ToListAsync();
+                    .Include(x => x.ProjectType).ToListAsync();
             }
             catch (Exception ex)
             {

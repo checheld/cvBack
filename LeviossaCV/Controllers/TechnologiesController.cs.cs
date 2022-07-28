@@ -16,7 +16,7 @@ namespace LeviossaCV.Controllers
 
         [HttpPost]
         [Route("technologies/add")]
-        public async Task<IActionResult> AddTechnology([FromBody] TechnologyDTO technology)
+        public async Task<IActionResult> AddTechnology([FromBody] List<TechnologyDTO> technology)
         {
             try
             {
