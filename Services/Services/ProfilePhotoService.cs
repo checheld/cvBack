@@ -6,7 +6,6 @@ using Data.Entities;
 using Data.Repositories.Utility.Interface;
 using Domain;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 using Services.Abstract;
 #endregion
 
@@ -18,8 +17,6 @@ namespace Services
         private readonly IMapper _mapper;
         private readonly IRepositoryManager _repositoryManager;
         private readonly Account _account;
-       /* public IConfiguration Configuration { get; }
-        private Account CloudinaryAccount { get; }*/
         private Cloudinary _cloudinary;
 
         public ProfilePhotoService(IMapper mapper, IRepositoryManager repositoryManager, Account account)

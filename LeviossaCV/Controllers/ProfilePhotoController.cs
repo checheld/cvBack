@@ -47,6 +47,7 @@ namespace LeviossaCV.Controllers
         {
             try
             {
+                photoParams.Id = id;
                 return Ok(await _serviceManager.ProfilePhotoService.UpdatePhotoParams(photoParams));
             }
             catch (Exception ex)
