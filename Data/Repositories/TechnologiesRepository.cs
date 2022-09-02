@@ -30,12 +30,14 @@ namespace Data.Repositories
             }
         }
 
-        public async Task DeleteTechnologyById(int id)
+        public async Task<int> DeleteTechnologyById(int id)
         {
             try
             {
                 db.Technologies.Remove(await db.Technologies.SingleOrDefaultAsync(x => x.Id == id));
                 await db.SaveChangesAsync();
+
+                return id;
             }
             catch (Exception ex)
             {
@@ -72,7 +74,7 @@ namespace Data.Repositories
             try
             {
                 return await db.Technologies
-                    .Where(tech => tech.Name.Contains(search))
+                    .Where(tech => tech.Name.Trim().ToLower().Contains(search))
                     .ToListAsync();
             }
             catch (Exception ex)

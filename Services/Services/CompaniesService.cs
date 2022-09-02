@@ -55,11 +55,13 @@ namespace Services
             }
         }
 
-        public async Task DeleteCompanyById(int id)
+        public async Task<int> DeleteCompanyById(int id)
         {
             try
             {
                 await _repositoryManager.CompaniesRepository.DeleteCompanyById(id);
+
+                return id;
             }
             catch (Exception ex)
             {

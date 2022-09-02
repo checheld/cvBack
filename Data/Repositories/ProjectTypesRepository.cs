@@ -31,12 +31,14 @@ namespace Data.Repositories
             }
         }
 
-        public async Task DeleteProjectTypeById(int id)
+        public async Task<int> DeleteProjectTypeById(int id)
         {
             try
             {
                 db.ProjectTypes.Remove(await db.ProjectTypes.SingleOrDefaultAsync(x => x.Id == id));
                 await db.SaveChangesAsync();
+
+                return id;
             }
             catch (Exception ex)
             {
@@ -73,8 +75,9 @@ namespace Data.Repositories
             try
             {
                 return await db.ProjectTypes
-                    .Where(pt => pt.Name.Contains(search))
+                    .Where(pt => pt.Name.Trim().ToLower().Contains(search))
                     .ToListAsync();
+       
             }
             catch (Exception ex)
             {

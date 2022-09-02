@@ -45,12 +45,14 @@ namespace Data.Repositories
             }
         }
 
-        public async Task DeleteCVById(int id)
+        public async Task<int> DeleteCVById(int id)
         {
             try
             {
                 db.CVs.Remove(await db.CVs.SingleOrDefaultAsync(x => x.Id == id));
                 await db.SaveChangesAsync();
+
+                return id;
             }
             catch (Exception ex)
             {

@@ -73,11 +73,11 @@ namespace Services.Properties {
         ///        @@import url(https://fonts.googleapis.com/css?family=Nunito);
         ///        body {
         ///            font-family: &quot;Nunito&quot;, sans-serif;
-        ///            width: 21cm;
         ///        }
         ///        .container {
         ///            margin-top: 60px;
-        ///            margin-bottom: 60p [rest of string was truncated]&quot;;.
+        ///            margin-bottom: 60px;
+        ///            margin-lef [rest of string was truncated]&quot;;.
         /// </summary>
         public static string myPdf {
             get {

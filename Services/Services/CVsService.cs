@@ -72,9 +72,10 @@ namespace Services
                 await _repositoryManager.CVsRepository.AddProjectCVs(projectCVList);
 
                 c.ProjectCVList.Select(c => { c.CV = null; c.Project = null; return c; }).ToList();
-                var item = _mapper.Map<CVDTO>(c);
 
-                return item;
+                var item = await this._repositoryManager.CVsRepository.GetCVById(c.Id);
+
+                return _mapper.Map<CVDTO>(item);
             }
             catch (Exception ex)
             {
@@ -82,12 +83,14 @@ namespace Services
             }
         }
 
-        public async Task DeleteCVById(int id)
+        public async Task<int> DeleteCVById(int id)
         {
             try
             {
                 await this._repositoryManager.CVsRepository.RemoveAllProjectCVs(id);
                 await _repositoryManager.CVsRepository.DeleteCVById(id);
+
+                return id;
             }
             catch (Exception ex)
             {
@@ -199,7 +202,8 @@ namespace Services
 
                 c.ProjectCVList.Select(c => { c.CV = null; c.Project = null; return c; }).ToList();
 
-                return _mapper.Map<CVDTO>(c);
+                var item = await this._repositoryManager.CVsRepository.GetCVById(c.Id);
+                return _mapper.Map<CVDTO>(item);
             }
             catch (Exception ex)
             {

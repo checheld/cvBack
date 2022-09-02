@@ -43,12 +43,14 @@ namespace Data.Repositories
             }
         }
 
-        public async Task DeleteProjectById(int id)
+        public async Task<int> DeleteProjectById(int id)
         {
             try
             {
                 db.Projects.Remove(await db.Projects.SingleOrDefaultAsync(x => x.Id == id));
                 await db.SaveChangesAsync();
+
+                return id;
             }
             catch (Exception ex)
             {

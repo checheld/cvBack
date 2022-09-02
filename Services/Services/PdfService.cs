@@ -28,7 +28,9 @@ namespace Services
             public AppMappingProject()
             {
                 CreateMap<ProjectCVDTO, ProjectCVEntity>().ForMember(x => x.Project, y => y.MapFrom(t => t.Project)).ReverseMap();
-                CreateMap<ProjectDTO, ProjectEntity>().ForMember(x => x.TechnologyList, y => y.MapFrom(t => t.TechnologyList)).ReverseMap();
+                CreateMap<ProjectDTO, ProjectEntity>().ForMember(x => x.TechnologyList, y => y.MapFrom(t => t.TechnologyList))
+                    .ForMember(x => x.ProjectType, y => y.MapFrom(t => t.ProjectType))
+                    .ForMember(x => x.PhotoList, y => y.MapFrom(t => t.PhotoList)).ReverseMap();
                 CreateMap<UserDTO, UserEntity>().ForMember(x => x.TechnologyList, y => y.MapFrom(t => t.TechnologyList)).
                     ForMember(x => x.EducationList, y => y.MapFrom(t => t.EducationList)).
                     ForMember(x => x.WorkExperienceList, y => y.MapFrom(t => t.WorkExperienceList)).ReverseMap();
@@ -51,6 +53,10 @@ namespace Services
 
             foreach (var projectCV in projectCVs)
             {
+               /* var foundProjectType = await _repositoryManager.ProjectTypesRepository.GetProjectTypeById(projectCV.Project.ProjectTypeId);
+                projectCV.Project.ProjectType = foundProjectType;*/
+                var foundProject = await _repositoryManager.ProjectsRepository.GetProjectById(projectCV.ProjectId);
+                projectCV.Project = foundProject;
                 projectCVList.Add(_mapper.Map<ProjectCVDTO>(projectCV));
             }
 

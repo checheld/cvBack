@@ -9,6 +9,12 @@ using Services.Abstract;
 using Services.Utility;
 using Services.Utility.Interface;
 using System.Text.Json.Serialization;
+using static API.Controllers.CompaniesController;
+using static API.Controllers.UniversitiesController;
+using static LeviossaCV.Controllers.ProjectsController;
+using static LeviossaCV.Controllers.ProjectTypesController;
+using static LeviossaCV.Controllers.TechnologiesController;
+using static LeviossaCV.Controllers.UsersController;
 using static Services.CompaniesService;
 using static Services.CVsService;
 using static Services.ProfilePhotoService;
@@ -43,10 +49,11 @@ builder.Services.AddTransient<IPdfService, PdfService>();
 builder.Services.AddTransient<IServiceManager, ServiceManager>();
 builder.Services.AddTransient<IRepositoryManager, RepositoryManager>();
 
-builder.Services.AddAutoMapper(typeof(AppMappingUser), typeof(AppMappingCompany), 
-    typeof(AppMappingTechnology), typeof(AppMappingUniversity), typeof(AppMappingProject), 
-    typeof(AppMappingCV), typeof(AppMappingProjectPhoto), typeof(AppMappingPhotoParams), 
-    typeof(AppMappingProjectType));
+builder.Services.AddAutoMapper(typeof(AppMappingUser), typeof(AppMappingCompany),
+    typeof(AppMappingTechnology), typeof(AppMappingUniversity), typeof(AppMappingProject),
+    typeof(AppMappingCV), typeof(AppMappingProjectPhoto), typeof(AppMappingPhotoParams),
+    typeof(AppMappingProjectType), typeof(AppMappingUniversityController), typeof(AppMappingProjectTypeController),
+    typeof(AppMappingCompanyController), typeof(AppMappingTechnologyController), typeof(AppMappingProjectsController));
 
 // this needed for ignore cyclic json objects
 builder.Services.AddControllers().AddJsonOptions(x =>

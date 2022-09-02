@@ -55,11 +55,13 @@ namespace Services
             }
         }
         
-        public async Task DeleteTechnologyById(int id)
+        public async Task<int> DeleteTechnologyById(int id)
         {
             try
             {
                 await _repositoryManager.TechnologiesRepository.DeleteTechnologyById(id);
+
+                return id;
             }
             catch (Exception ex)
             {

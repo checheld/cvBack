@@ -9,7 +9,7 @@ namespace Data.Repositories.Abstract
         Task<ProjectTypeEntity> UpdateProjectType(ProjectTypeEntity projectType);
         Task<ProjectTypeEntity> GetProjectTypeById(int id);
         Task<List<ProjectTypeEntity>> GetProjectTypesBySearch(string search);
-        Task DeleteProjectTypeById(int id);
+        Task<int> DeleteProjectTypeById(int id);
         Task<List<ProjectTypeEntity>> GetAllProjectTypes();
     }
 }

@@ -54,11 +54,13 @@ namespace Services
             }
         }
         
-        public async Task DeleteUniversityById(int id)
+        public async Task<int> DeleteUniversityById(int id)
         {
             try
             {
                 await _repositoryManager.UniversitiesRepository.DeleteUniversityById(id);
+
+                return id;
             }
             catch (Exception ex)
             {

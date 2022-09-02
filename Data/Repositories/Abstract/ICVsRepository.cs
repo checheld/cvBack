@@ -8,7 +8,7 @@ namespace Data.Repositories.Abstract
         Task<CVEntity> UpdateCV(CVEntity cv);
         Task<CVEntity> GetCVById(int id);
         Task<List<CVEntity>> GetCVsBySearch(string search);
-        Task DeleteCVById(int id);
+        Task<int> DeleteCVById(int id);
         Task<List<CVEntity>> GetAllCVs();
 
         Task AddProjectCVs(List<ProjectCVEntity> projectCV);

@@ -5,7 +5,7 @@ namespace Services.Abstract
     public interface ICVsService
     {
         Task<CVDTO> AddCV(CVDTO cv);
-        Task DeleteCVById(int id);
+        Task<int> DeleteCVById(int id);
         Task<CVDTO> GetCVById(int id);
         Task<List<CVDTO>> GetCVsBySearch(string search);
         Task<CVDTO> UpdateCV(CVDTO cv);

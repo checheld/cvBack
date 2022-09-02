@@ -97,9 +97,11 @@ namespace Services
                 c.PhotoList.Select(c => { c.Project = null; return c; }).ToList();
                 c.ProjectType.ProjectProjectTypeList.Select(c => { c.ProjectType = null; return c; }).ToList();
 
-                var item = _mapper.Map<ProjectDTO>(c);
+                var item = await _repositoryManager.ProjectsRepository.GetProjectById(c.Id);
+                var projectType = await _repositoryManager.ProjectTypesRepository.GetProjectTypeById(item.ProjectTypeId);
+                item.ProjectType = projectType;
 
-                return item;
+                return _mapper.Map<ProjectDTO>(item);
             }
             catch (Exception ex)
             {
@@ -107,7 +109,7 @@ namespace Services
             }
         }
 
-        public async Task DeleteProjectById(int id)
+        public async Task<int> DeleteProjectById(int id)
         {
             try
             {
@@ -126,6 +128,8 @@ namespace Services
 
                 await this._repositoryManager.ProjectsRepository.RemoveAllProjectPhotos(getProject.Id);
                 await _repositoryManager.ProjectsRepository.DeleteProjectById(id);
+
+                return id;
             }
             catch (Exception ex)
             {
@@ -167,7 +171,7 @@ namespace Services
 
                 foreach (ProjectEntity project in searchProjectsRepo)
                 {
-                    projects.Add(_mapper.Map<ProjectDTO>(project));
+                    projects.Add(_mapper.Map<ProjectDTO>(await _repositoryManager.ProjectsRepository.GetProjectById(project.Id)));
                 }
 
                 return projects;
@@ -252,7 +256,7 @@ namespace Services
                 }
                 await _repositoryManager.ProjectPhotoRepository.AddProjectPhotos(PhotoList);
 
-                return _mapper.Map<ProjectDTO>(p);
+                return _mapper.Map<ProjectDTO>(await _repositoryManager.ProjectsRepository.GetProjectById(p.Id));
             }
             catch (Exception ex)
             {

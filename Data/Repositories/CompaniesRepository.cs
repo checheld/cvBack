@@ -30,12 +30,14 @@ namespace Data.Repositories
             }
         }
 
-        public async Task DeleteCompanyById(int id)
+        public async Task<int> DeleteCompanyById(int id)
         {
             try
             {
                 db.Companies.Remove(await db.Companies.SingleOrDefaultAsync(x => x.Id == id));
                 await db.SaveChangesAsync();
+
+                return id;
             }
             catch (Exception ex)
             {
@@ -72,7 +74,7 @@ namespace Data.Repositories
             try
             {
                 return await db.Companies
-                    .Where(comp => comp.Name.Contains(search))
+                    .Where(comp => comp.Name.Trim().ToLower().Contains(search))
                     .ToListAsync();
             }
             catch (Exception ex)

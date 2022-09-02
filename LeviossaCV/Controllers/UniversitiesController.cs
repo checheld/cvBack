@@ -1,4 +1,6 @@
-﻿using Domain;
+﻿using AutoMapper;
+using Domain;
+using LeviossaCV.UI;
 using Microsoft.AspNetCore.Mvc;
 using Services.Utility.Interface;
 
@@ -8,9 +10,19 @@ namespace API.Controllers
     public class UniversitiesController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
-        public UniversitiesController(IServiceManager serviceManager)
+        private readonly IMapper _mapper;
+        public UniversitiesController(IMapper mapper, IServiceManager serviceManager)
         {
+            _mapper = mapper;
             _serviceManager = serviceManager;
+        }
+
+        public class AppMappingUniversityController : Profile
+        {
+            public AppMappingUniversityController()
+            {
+                CreateMap<UniversityDTO, SimpleElementUI>().ReverseMap();
+            }
         }
 
         [HttpPost]
@@ -19,7 +31,8 @@ namespace API.Controllers
         {
             try
             {
-                return Ok(await _serviceManager.UniversitiesService.AddUniversities(university));
+                var universitiesDTO = await _serviceManager.UniversitiesService.AddUniversities(university);
+                return Ok(_mapper.Map<List<SimpleElementUI>>(universitiesDTO));
             }
             catch (Exception ex)
             {
@@ -35,7 +48,7 @@ namespace API.Controllers
             {
                 university.Id = id;
 
-                return Ok(await _serviceManager.UniversitiesService.UpdateUniversity(university));
+                return Ok(_mapper.Map<SimpleElementUI>(await _serviceManager.UniversitiesService.UpdateUniversity(university)));
             }
             catch (Exception ex)
             {
@@ -49,7 +62,8 @@ namespace API.Controllers
         {
             try
             {
-                return Ok(await _serviceManager.UniversitiesService.GetAllUniversities());
+                var universitiesDTO = await _serviceManager.UniversitiesService.GetAllUniversities();
+                return Ok(_mapper.Map<List<SimpleElementUI>>(universitiesDTO));
             }
             catch (Exception ex)
             {
@@ -63,7 +77,7 @@ namespace API.Controllers
         {
             try
             {
-                return Ok(await _serviceManager.UniversitiesService.GetUniversityById(id));
+                return Ok(_mapper.Map<SimpleElementUI>(await _serviceManager.UniversitiesService.GetUniversityById(id)));
             }
             catch (Exception ex)
             {
@@ -77,7 +91,8 @@ namespace API.Controllers
         {
             try
             {
-                return Ok(await _serviceManager.UniversitiesService.GetUniversitiesBySearch(search));
+                var universitiesDTO = await _serviceManager.UniversitiesService.GetUniversitiesBySearch(search);
+                return Ok(_mapper.Map<List<SimpleElementUI>>(universitiesDTO));
             }
             catch (Exception ex)
             {
@@ -93,7 +108,7 @@ namespace API.Controllers
             {
                 await _serviceManager.UniversitiesService.DeleteUniversityById(id);
 
-                return Ok();
+                return Ok(id);
             }
             catch (Exception ex)
             {

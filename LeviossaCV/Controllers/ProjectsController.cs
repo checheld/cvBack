@@ -1,4 +1,6 @@
-﻿using Domain;
+﻿using AutoMapper;
+using Domain;
+using LeviossaCV.UI;
 using Microsoft.AspNetCore.Mvc;
 using Services.Utility.Interface;
 
@@ -8,9 +10,20 @@ namespace LeviossaCV.Controllers
     public class ProjectsController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
-        public ProjectsController(IServiceManager serviceManager)
+        private readonly IMapper _mapper;
+        public ProjectsController(IMapper mapper, IServiceManager serviceManager)
         {
+            _mapper = mapper;
             _serviceManager = serviceManager;
+        }
+
+        public class AppMappingProjectsController : Profile
+        {
+            public AppMappingProjectsController()
+            {
+                CreateMap<ProjectDTO, ProjectUI>().ForMember(x => x.TechnologyList, y => y.MapFrom(t => t.TechnologyList)).
+                    ForMember(x => x.PhotoList, y => y.MapFrom(t => t.PhotoList)).ReverseMap();
+            }
         }
 
         [HttpPost]
@@ -20,7 +33,8 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _serviceManager.ProjectsService.AddProject(project));
+                var projectDTO = await _serviceManager.ProjectsService.AddProject(project);
+                return Ok(_mapper.Map<ProjectUI>(projectDTO));
             }
             catch (Exception ex)
             {
@@ -36,7 +50,7 @@ namespace LeviossaCV.Controllers
             {
                 project.Id = id;
 
-                return Ok(await _serviceManager.ProjectsService.UpdateProject(project));
+                return Ok(_mapper.Map<ProjectUI>(await _serviceManager.ProjectsService.UpdateProject(project)));
             }
             catch (Exception ex)
             {
@@ -50,7 +64,8 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _serviceManager.ProjectsService.GetAllProjects());
+                var projectsDTO = await _serviceManager.ProjectsService.GetAllProjects();
+                return Ok(_mapper.Map<List<ProjectUI>>(projectsDTO));
             }
             catch (Exception ex)
             {
@@ -64,7 +79,7 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _serviceManager.ProjectsService.GetProjectById(id));
+                return Ok(_mapper.Map<ProjectUI>(await _serviceManager.ProjectsService.GetProjectById(id)));
             }
             catch (Exception ex)
             {
@@ -78,7 +93,7 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _serviceManager.ProjectsService.GetProjectsBySearch(searchProjects));
+                return Ok(_mapper.Map<List<ProjectUI>>(await _serviceManager.ProjectsService.GetProjectsBySearch(searchProjects)));
             }
             catch (Exception ex)
             {
@@ -93,7 +108,7 @@ namespace LeviossaCV.Controllers
             {
                 await _serviceManager.ProjectsService.DeleteProjectById(id);
 
-                return Ok();
+                return Ok(id);
             }
             catch (Exception ex)
             {

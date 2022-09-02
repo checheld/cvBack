@@ -8,7 +8,7 @@ namespace Data.Repositories.Abstract
         Task<UserEntity> UpdateUser(UserEntity user);
         Task<UserEntity> GetUserById(int id);
         Task<List<UserEntity>> GetUsersBySearch(string search);
-        Task DeleteUserById(int id);
+        Task<int> DeleteUserById(int id);
         Task<List<UserEntity>> GetAllUsers();
 
         Task AddUserTechnology(List<UserTechnologyEntity> userTechnology);

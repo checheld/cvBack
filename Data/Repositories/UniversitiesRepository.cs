@@ -30,12 +30,14 @@ namespace Data.Repositories
             }
         }
 
-        public async Task DeleteUniversityById(int id)
+        public async Task<int> DeleteUniversityById(int id)
         {
             try
             {
                 db.Universities.Remove(await db.Universities.SingleOrDefaultAsync(x => x.Id == id));
                 await db.SaveChangesAsync();
+
+                return id;
             }
             catch (Exception ex)
             {
@@ -72,7 +74,7 @@ namespace Data.Repositories
             try
             {
                 return await db.Universities
-                    .Where(uni => uni.Name.Contains(search))
+                    .Where(uni => uni.Name.Trim().ToLower().Contains(search))
                     .ToListAsync();
             }
             catch (Exception ex)

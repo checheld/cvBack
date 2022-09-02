@@ -1,4 +1,6 @@
-﻿using Domain;
+﻿using AutoMapper;
+using Domain;
+using LeviossaCV.UI;
 using Microsoft.AspNetCore.Mvc;
 using Services.Utility.Interface;
 
@@ -8,10 +10,20 @@ namespace LeviossaCV.Controllers
     public class TechnologiesController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
-        public TechnologiesController(IServiceManager serviceManager)
+        private readonly IMapper _mapper;
+        public TechnologiesController(IMapper mapper, IServiceManager serviceManager)
         {
+            _mapper = mapper;
             _serviceManager = serviceManager;
 
+        }
+
+        public class AppMappingTechnologyController : Profile
+        {
+            public AppMappingTechnologyController()
+            {
+                CreateMap<TechnologyDTO, TechnologyUI>().ReverseMap();
+            }
         }
 
         [HttpPost]
@@ -20,7 +32,8 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _serviceManager.TechnologiesService.AddTechnology(technology));
+                var techDTO = await _serviceManager.TechnologiesService.AddTechnology(technology);
+                return Ok(_mapper.Map<List<TechnologyUI>>(techDTO));
             }
             catch (Exception ex)
             {
@@ -36,7 +49,7 @@ namespace LeviossaCV.Controllers
             {
                 technology.Id = id;
 
-                return Ok(await _serviceManager.TechnologiesService.UpdateTechnology(technology));
+                return Ok(_mapper.Map<TechnologyUI>(await _serviceManager.TechnologiesService.UpdateTechnology(technology)));
             }
             catch (Exception ex)
             {
@@ -50,7 +63,8 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _serviceManager.TechnologiesService.GetAllTechnologies());
+                var techDTO = await _serviceManager.TechnologiesService.GetAllTechnologies();
+                return Ok(_mapper.Map<List<TechnologyUI>>(techDTO));
             }
             catch (Exception ex)
             {
@@ -64,7 +78,7 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _serviceManager.TechnologiesService.GetTechnologyById(id));
+                return Ok(_mapper.Map<TechnologyUI>(await _serviceManager.TechnologiesService.GetTechnologyById(id)));
             }
             catch (Exception ex)
             {
@@ -78,7 +92,9 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _serviceManager.TechnologiesService.GetTechnologiesBySearch(search));
+                var techDTO = await _serviceManager.TechnologiesService.GetTechnologiesBySearch(search);
+
+                return Ok(_mapper.Map<List<TechnologyUI>>(techDTO));
             }
             catch (Exception ex)
             {
@@ -94,7 +110,7 @@ namespace LeviossaCV.Controllers
             {
                 await _serviceManager.TechnologiesService.DeleteTechnologyById(id);
 
-                return Ok();
+                return Ok(id);
             }
             catch (Exception ex)
             {

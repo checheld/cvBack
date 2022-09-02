@@ -92,7 +92,7 @@ namespace LeviossaCV.Controllers
             {
                 await _serviceManager.CVsService.DeleteCVById(id);
 
-                return Ok();
+                return Ok(id);
             }
             catch (Exception ex)
             {

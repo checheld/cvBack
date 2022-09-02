@@ -91,7 +91,7 @@ namespace LeviossaCV.Controllers
             try
             {
                 await _serviceManager.UsersService.DeleteUserById(id);
-                return Ok();
+                return Ok(id);
             }
             catch (Exception ex)
             {

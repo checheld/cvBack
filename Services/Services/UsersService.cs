@@ -125,7 +125,7 @@ namespace Services
             }
         }
 
-        public async Task DeleteUserById(int id)
+        public async Task<int> DeleteUserById(int id)
         {
             try
             {
@@ -134,6 +134,8 @@ namespace Services
                 await this._repositoryManager.UsersRepository.RemoveAllEducations(getUser.Id);
                 await this._repositoryManager.UsersRepository.RemoveAllWorkExperiences(getUser.Id);
                 await _repositoryManager.UsersRepository.DeleteUserById(id);
+
+                return id;
             }
             catch (Exception ex)
             {
@@ -310,7 +312,8 @@ namespace Services
                 u.EducationList.Select(c => { c.University.EducationUniversityList = null; c.User = null; return c; }).ToList();
                 u.WorkExperienceList.Select(c => { c.Company.WorkExperienceCompanyList = null; c.User = null; return c; }).ToList();
                 #endregion
-                return _mapper.Map<UserDTO>(u);
+                var item = await _repositoryManager.UsersRepository.GetUserById(u.Id);
+                return _mapper.Map<UserDTO>(item);
             }
             catch (Exception ex)
             {

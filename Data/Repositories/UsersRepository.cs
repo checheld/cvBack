@@ -72,12 +72,14 @@ namespace Data.Repositories
             }
         }
 
-        public async Task DeleteUserById(int id)
+        public async Task<int> DeleteUserById(int id)
         {
             try
             {
                 db.Users.Remove(await db.Users.SingleOrDefaultAsync(x => x.Id == id));
                 await db.SaveChangesAsync();
+
+                return id;
             }
             catch (Exception ex)
             {

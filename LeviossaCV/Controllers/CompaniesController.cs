@@ -1,4 +1,6 @@
-﻿using Domain;
+﻿using AutoMapper;
+using Domain;
+using LeviossaCV.UI;
 using Microsoft.AspNetCore.Mvc;
 using Services.Utility.Interface;
 
@@ -8,9 +10,19 @@ namespace API.Controllers
     public class CompaniesController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
-        public CompaniesController(IServiceManager serviceManager)
+        private readonly IMapper _mapper;
+        public CompaniesController(IMapper mapper, IServiceManager serviceManager)
         {
+            _mapper = mapper;
             _serviceManager = serviceManager;
+        }
+
+        public class AppMappingCompanyController : Profile
+        {
+            public AppMappingCompanyController()
+            {
+                CreateMap<CompanyDTO, SimpleElementUI>().ReverseMap();
+            }
         }
 
         [HttpPost]
@@ -19,7 +31,8 @@ namespace API.Controllers
         {
             try
             {
-                return Ok(await _serviceManager.CompaniesService.AddCompanies(company));
+                var companiesDTO = await _serviceManager.CompaniesService.AddCompanies(company);
+                return Ok(_mapper.Map<List<SimpleElementUI>>(companiesDTO));
             }
             catch (Exception ex)
             {
@@ -35,7 +48,7 @@ namespace API.Controllers
             {
                 company.Id = id;
 
-                return Ok(await _serviceManager.CompaniesService.UpdateCompany(company));
+                return Ok(_mapper.Map<SimpleElementUI>(await _serviceManager.CompaniesService.UpdateCompany(company)));
             }
             catch (Exception ex)
             {
@@ -49,7 +62,8 @@ namespace API.Controllers
         {
             try
             {
-                return Ok(await _serviceManager.CompaniesService.GetAllCompanies());
+                var companiesDTO = (await _serviceManager.CompaniesService.GetAllCompanies());
+                return Ok(_mapper.Map<List<SimpleElementUI>>(companiesDTO));
             }
             catch (Exception ex)
             {
@@ -63,7 +77,7 @@ namespace API.Controllers
         {
             try
             {
-                return Ok(await _serviceManager.CompaniesService.GetCompanyById(id));
+                return Ok(_mapper.Map<SimpleElementUI>(await _serviceManager.CompaniesService.GetCompanyById(id)));
             }
             catch (Exception ex)
             {
@@ -77,7 +91,8 @@ namespace API.Controllers
         {
             try
             {
-                return Ok(await _serviceManager.CompaniesService.GetCompaniesBySearch(search));
+                var companiesDTO = await _serviceManager.CompaniesService.GetCompaniesBySearch(search);
+                return Ok(_mapper.Map<List<SimpleElementUI>>(companiesDTO));
             }
             catch (Exception ex)
             {
@@ -92,7 +107,7 @@ namespace API.Controllers
             {
                 await _serviceManager.CompaniesService.DeleteCompanyById(id);
 
-                return Ok();
+                return Ok(id);
             }
             catch (Exception ex)
             {

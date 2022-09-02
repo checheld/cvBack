@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using LeviossaCV.UI;
+using Microsoft.AspNetCore.Mvc;
 using Services.Domain;
 using Services.Utility.Interface;
 
@@ -8,9 +10,19 @@ namespace LeviossaCV.Controllers
     public class ProjectTypesController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
-        public ProjectTypesController(IServiceManager serviceManager)
+        private readonly IMapper _mapper;
+        public ProjectTypesController(IMapper mapper, IServiceManager serviceManager)
         {
+            _mapper = mapper;
             _serviceManager = serviceManager;
+        }
+
+        public class AppMappingProjectTypeController : Profile
+        {
+            public AppMappingProjectTypeController()
+            {
+                CreateMap<ProjectTypeDTO, SimpleElementUI>().ReverseMap();
+            }
         }
 
         [HttpPost]
@@ -19,7 +31,8 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _serviceManager.ProjectTypesService.AddProjectTypes(projectType));
+                var projectTypeDTO = await _serviceManager.ProjectTypesService.AddProjectTypes(projectType);
+                return Ok(_mapper.Map<List<SimpleElementUI>>(projectTypeDTO));
             }
             catch (Exception ex)
             {
@@ -35,7 +48,7 @@ namespace LeviossaCV.Controllers
             {
                 projectType.Id = id;
 
-                return Ok(await _serviceManager.ProjectTypesService.UpdateProjectType(projectType));
+                return Ok(_mapper.Map<SimpleElementUI>(await _serviceManager.ProjectTypesService.UpdateProjectType(projectType)));
             }
             catch (Exception ex)
             {
@@ -49,7 +62,8 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _serviceManager.ProjectTypesService.GetAllProjectTypes());
+                var projectTypesDTO = await _serviceManager.ProjectTypesService.GetAllProjectTypes();
+                return Ok(_mapper.Map<List<SimpleElementUI>>(projectTypesDTO));
             }
             catch (Exception ex)
             {
@@ -63,7 +77,7 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _serviceManager.ProjectTypesService.GetProjectTypeById(id));
+                return Ok(_mapper.Map<SimpleElementUI>(await _serviceManager.ProjectTypesService.GetProjectTypeById(id)));
             }
             catch (Exception ex)
             {
@@ -77,14 +91,15 @@ namespace LeviossaCV.Controllers
         {
             try
             {
-                return Ok(await _serviceManager.ProjectTypesService.GetProjectTypesBySearch(search));
+                var projectTypeDTO = await _serviceManager.ProjectTypesService.GetProjectTypesBySearch(search);
+                return Ok(_mapper.Map<List<SimpleElementUI>>(projectTypeDTO));
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-
+     
         [HttpDelete]
         [Route("projectTypes/{id}")]
         public async Task<IActionResult> DeleteProjectTypeById(int id)
@@ -93,7 +108,7 @@ namespace LeviossaCV.Controllers
             {
                 await _serviceManager.ProjectTypesService.DeleteProjectTypeById(id);
 
-                return Ok();
+                return Ok(id);
             }
             catch (Exception ex)
             {

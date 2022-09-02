@@ -54,11 +54,13 @@ namespace Services.Services
             }
         }
 
-        public async Task DeleteProjectTypeById(int id)
+        public async Task<int> DeleteProjectTypeById(int id)
         {
             try
             {
                 await _repositoryManager.ProjectTypesRepository.DeleteProjectTypeById(id);
+
+                return id;
             }
             catch (Exception ex)
             {
