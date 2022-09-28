@@ -49,14 +49,14 @@ builder.Services.AddAuthentication("Bearer")
         opt.RequireHttpsMetadata = false;
         /* opt.Authority = "https://localhost:5001";
          opt.Audience = "https://localhost:5001/resources";*/
-        opt.Authority = "http://identity-server-1.herokuapp.com";
-        opt.Audience = "http://identity-server-1.herokuapp.com/resources";
+        opt.Authority = "https://identity-server-1.herokuapp.com";
+        opt.Audience = "https://identity-server-1.herokuapp.com/resources";
         opt.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateLifetime = true,
             ValidateIssuer = true,
             /*ValidIssuer = "https://localhost:5001"*/
-            ValidIssuer = "http://identity-server-1.herokuapp.com"
+            ValidIssuer = "https://identity-server-1.herokuapp.com"
         };
     });
 
