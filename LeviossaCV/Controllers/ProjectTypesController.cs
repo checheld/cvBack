@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LeviossaCV.UI;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Domain;
 using Services.Utility.Interface;
@@ -7,6 +8,7 @@ using Services.Utility.Interface;
 namespace LeviossaCV.Controllers
 {
     [ApiController]
+    [Authorize]
     public class ProjectTypesController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;

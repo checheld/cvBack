@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Services.Utility.Interface;
 
 namespace LeviossaCV.Controllers
 {
     [ApiController]
+    [Authorize]
     public class ProjectPhotoController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;

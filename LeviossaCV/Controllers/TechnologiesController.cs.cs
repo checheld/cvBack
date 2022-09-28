@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using Domain;
 using LeviossaCV.UI;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Utility.Interface;
 
 namespace LeviossaCV.Controllers
 {
     [ApiController]
+    [Authorize]
     public class TechnologiesController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;

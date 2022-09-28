@@ -1,10 +1,12 @@
 ﻿using Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Utility.Interface;
 
 namespace LeviossaCV.Controllers
 {
     [ApiController]
+    [Authorize]
     public class ProfilePhotoController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;

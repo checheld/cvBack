@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Services.Abstract;
 
 namespace LeviossaCV.Controllers
 {
     [ApiController]
+    [Authorize]
     public class PdfController : ControllerBase
     {
         private readonly IPdfService _PdfService;

@@ -4,6 +4,7 @@ using Data;
 using Data.Repositories.Utility;
 using Data.Repositories.Utility.Interface;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Services;
 using Services.Abstract;
 using Services.Utility;
@@ -30,7 +31,6 @@ using static Services.UsersService;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
-
 IConfiguration configuration = builder.Configuration;
 
 /*builder.Services.AddDbContext<ApplicationContext>(opts =>
@@ -42,6 +42,33 @@ builder.Services.AddDbContext<ApplicationContext>(opts =>
     opts.UseNpgsql(configuration["ConnectionStrings:DefaultConnection"],
      b => b.MigrationsAssembly("Data")
      ));
+
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", opt =>
+    {
+        opt.RequireHttpsMetadata = false;
+        /* opt.Authority = "https://localhost:5001";
+         opt.Audience = "https://localhost:5001/resources";*/
+        opt.Authority = "http://identity-server-1.herokuapp.com";
+        opt.Audience = "http://identity-server-1.herokuapp.com/resources";
+        opt.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateLifetime = true,
+            ValidateIssuer = true,
+            /*ValidIssuer = "https://localhost:5001"*/
+            ValidIssuer = "http://identity-server-1.herokuapp.com"
+        };
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    // Add a policy called "ApiScope" which is required our users are authenticated and have the API Scope Claim call WebAPI 
+    options.AddPolicy("ApiScope", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireClaim("scope2");
+    });
+});
 
 builder.Services.AddTransient<ApplicationContext, ApplicationContext>();
 
@@ -75,6 +102,7 @@ builder.Services.AddSingleton(cloudinarySettings);
 var app = builder.Build();
 
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
@@ -91,5 +119,5 @@ app.UseCors(x => x
 
 app.MapRazorPages();
 
-app.Run("http://localhost:3001");
-/*app.Run();*/
+/*app.Run("http://localhost:3001");*/
+app.Run();
