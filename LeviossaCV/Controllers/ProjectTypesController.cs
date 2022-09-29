@@ -8,7 +8,7 @@ using Services.Utility.Interface;
 namespace LeviossaCV.Controllers
 {
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "Admin, Manager")]
     public class ProjectTypesController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;

@@ -5,7 +5,7 @@ using Services.Abstract;
 namespace LeviossaCV.Controllers
 {
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "Admin, Manager")]
     public class PdfController : ControllerBase
     {
         private readonly IPdfService _PdfService;

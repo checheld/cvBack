@@ -8,7 +8,7 @@ using Services.Utility.Interface;
 namespace API.Controllers
 {
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "Admin, Manager")]
     public class UniversitiesController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
