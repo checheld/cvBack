@@ -279,8 +279,8 @@
         <p style="color: #AFB5BF; margin-top: 10px; margin-bottom: 40px;">PORTFOLIO</p>
         @foreach(var projCV in @Model.ProjectCVList)
             {
-                <div style="display:flex; margin-bottom: 80px">
-                    <div style="min-width: 30%; margin-right: 40px;" class="breakWatcher">
+                <div style="display:flex; padding-top: 20px; margin-bottom: 60px" class="breakWatcher">
+                    <div style="min-width: 30%; margin-right: 40px;">
                         <h2 style="margin-top: 0">@projCV.Project.Name</h2>
                         <p class="secondaryText" style="margin-bottom: 5px">@projCV.Project.ProjectType.Name</p>
                         <p class="secondaryText" style="font-size: 15px">@projCV.Project.Country, @projCV.EndDate.Split("-")[0]</p>
@@ -297,12 +297,12 @@
                         <p class="secondaryText" style="padding-left: 20px;margin-bottom: 10px">
                             @projCV.Description;
                         </p>
-                        <div style="display: flex">
+                        <div style="display: flex; flex-wrap: wrap">
                          @foreach(var photo in @projCV.Project.PhotoList)
                             {
                                  <img src=@photo.Url
                                     alt="projectPhoto" 
-                                    style="width: 176px; margin-right: 5px">
+                                    style="width: 176px; margin-right: 5px; margin-bottom: 5px">
                             }
                         </div>
                         <div class="circle" 
